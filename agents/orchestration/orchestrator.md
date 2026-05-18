@@ -29,6 +29,9 @@ The required first durable actions are phase checkpoints:
 6. Run `scripts/commands/create-scenarios.py` after approval.
 7. Have the scenario-router answer the generated prompt, then record that JSON
    with `scripts/commands/record-scenario-backlog.py`.
+   Write intermediate router, scenario, and triage result files only under
+   `runs/<target>/<run-id>/`, never in the repository root, target checkout,
+   sibling runs, `/tmp`, or any other path outside the designated run folder.
 8. Summarize backlog coverage and ask for one approval to run the entire
    unfinished scenario backlog. Batch approval is not batch analysis: every
    scenario still needs its own rendered prompt, source review, evidence, and
