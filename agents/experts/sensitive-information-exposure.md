@@ -17,6 +17,29 @@ debug output, backups, and support/audit exports. The issue is not that data
 exists; it is that the wrong actor can obtain data that crosses a security
 boundary or materially aids exploitation.
 
+## Review Depth Standard
+
+- Treat the scenario as a coverage task, not a one-bug hunt. Close every central
+  proof obligation before returning `verified` or `rejected`; if any central
+  obligation remains unanswered, use `candidate` or `needs_context` and name the
+  smallest missing facts.
+- After the first plausible or verified issue, keep tracing within this expert's
+  root cause across sibling parameters, endpoints, roles, tenants, jobs, file
+  formats, configuration aliases, and shared helpers until the same-root surface
+  is exhausted or explicitly bounded.
+- Work both directions: from attacker-controlled entrypoints to sensitive sinks,
+  and from sensitive sinks or helpers back to every reachable caller. Include
+  stored, queued, generated, callback, import/export, mobile/API, admin, and
+  legacy paths when they share the same root cause.
+- Validate defenses at the final consuming boundary, including delegated
+  framework/library behavior, middleware ordering, runtime configuration,
+  generated code, and deployment settings. If a guard cannot be inspected, record
+  `needs_context` instead of assuming safety.
+- Prefer multiple precise finding candidates over one umbrella note when
+  separate endpoints, parameters, roles, tenants, artifacts, or deployment modes
+  have independently exploitable impact. Record safe sibling checks in
+  `same_root_expansion` and cross-family leads in `candidate_queue_entries`.
+
 ## Route When
 
 - Recon finds `.env`, configs, backups, private keys, tokens, CI files,
