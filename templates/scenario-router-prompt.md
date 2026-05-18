@@ -75,6 +75,16 @@ If an opportunity group is skipped, explain why in `coverage_notes` and
 `coverage_decisions` using the evidence, not a generic "low confidence"
 dismissal.
 
+Use `coverage_gaps.boundary_requirements` as mandatory endpoint coverage. Each
+listed request boundary represents an externally reachable endpoint discovered
+from framework config, security firewalls, generated routes, environment-derived
+paths, or vendor-owned handlers. Create a scenario that carries the listed
+`boundary_id` or `recon_item_id`, or add a boundary-specific `coverage_decision`
+with the same `path`, `expert`, and `boundary_id`. Do not drop a boundary merely
+because the concrete handler body lives in a missing dependency or generated
+framework code; use `needs_context` only when the implementation is genuinely
+unavailable after recording the endpoint and proof obligations.
+
 Coverage rule: every route/input file with a sink or exposure hint should either
 receive at least one scenario or have an explicit path-level
 `coverage_decision`. Every admin/debug/example exposure, direct execution alias,
@@ -118,4 +128,6 @@ The backlog recorder rejects router output when a path in
 `coverage_gaps.input_with_sink_or_exposure` lacks both a scenario and a
 path-level `coverage_decision`, or when a path/expert pair in
 `coverage_gaps.routing_requirements` lacks both a matching scenario and an
-expert-specific `coverage_decision`.
+expert-specific `coverage_decision`, or when a boundary in
+`coverage_gaps.boundary_requirements` lacks both a scenario carrying that
+`boundary_id`/`recon_item_id` and a boundary-specific `coverage_decision`.

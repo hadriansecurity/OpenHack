@@ -27,7 +27,7 @@ def main():
         raise SystemExit(2)
     path = run_path(args.target, args.run_id)
     recon = path / "recon-output"
-    names = ["recon-items.jsonl", "routes.jsonl", "inputs.jsonl", "sinks.jsonl", "exposures.jsonl", "coverage-gaps.json"]
+    names = ["recon-items.jsonl", "routes.jsonl", "inputs.jsonl", "sinks.jsonl", "exposures.jsonl", "request-boundaries.jsonl", "coverage-gaps.json"]
     artifacts = [recon / name for name in names]
     if args.semgrep:
         artifacts.append(recon / "semgrep-results.json")

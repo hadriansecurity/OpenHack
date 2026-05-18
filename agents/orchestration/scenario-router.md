@@ -41,6 +41,12 @@ scenarios required to cover the credible recon evidence without sampling.
 - Treat `coverage_gaps.routing_requirements` as the minimum explicit coverage
   contract. For every listed path/expert pair, create a matching scenario or
   write an expert-specific `coverage_decision` explaining why it is not routed.
+- Treat `coverage_gaps.boundary_requirements` as mandatory endpoint coverage.
+  For every listed request boundary, create a scenario carrying its
+  `boundary_id` or `recon_item_id`, or write a boundary-specific
+  `coverage_decision` with the same `path`, `expert`, and `boundary_id`.
+  Framework-owned, generated, environment-derived, and vendor-owned handlers are
+  still endpoints; missing handler bodies are `needs_context`, not silent skips.
 - Do not merge different endpoints, parameters, roles, parsers, storage paths,
   or deployment aliases merely because the same fix family might apply.
 - Use `candidate` scenarios for plausible source-to-sink paths that need proof;

@@ -42,8 +42,14 @@ Alongside `recon-items.jsonl`, emit line-based inventories for:
   parser, HTTP-client, and browser HTML sinks.
 - `exposures.jsonl`: admin/debug/example paths, aliases, default credentials,
   uploads, source/config exposure, and deployment-sensitive paths.
+- `request-boundaries.jsonl`: externally reachable request boundaries extracted
+  from framework config, security firewalls, route loaders, bundles/plugins,
+  environment-derived paths, and vendor-owned handlers. Emit these even when the
+  application controller body is missing; the boundary itself is durable routing
+  evidence.
 - `coverage-gaps.json`: paths that combine input hints with sink or exposure
-  hints and therefore deserve router attention.
+  hints, plus mandatory request-boundary requirements, and therefore deserve
+  router attention.
 
 These files are not proof. They are a cheap over-inventory to reduce missed
 scenarios.
