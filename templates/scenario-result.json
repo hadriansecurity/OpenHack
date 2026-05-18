@@ -1,12 +1,13 @@
 {
   "status": "verified|candidate|rejected|needs_context",
   "expert": "expert-agent-id",
-  "primary_vulnerability_class": "root-cause vulnerability class",
+  "primary_vulnerability_class": "root-cause vulnerability family or subtype",
   "summary": "Concise decision for this scenario.",
   "evidence": [
     {
       "path": "source-relative/path",
       "line": 1,
+      "snippet": "Exact source line snippet copied from the cited file",
       "role": "attacker role or unknown",
       "note": "source, sink, guard, or impact evidence"
     }

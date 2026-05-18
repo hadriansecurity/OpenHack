@@ -3,10 +3,10 @@
 Agents operate inside a single run folder. Target source is read-only unless the
 human explicitly asks for code changes.
 
-Expert agents own vulnerability classes. Surfaces such as API, GraphQL, upload,
-admin, or parser entrypoints are recon and routing signals; impacts such as RCE
-or account takeover are finding impacts. They are not primary expert ownership
-labels.
+Expert agents own OWASP/MITRE-aligned root-cause families. Surfaces such as API,
+GraphQL, upload, admin, or parser entrypoints are recon and routing signals;
+impacts such as RCE or account takeover are finding impacts. They are not
+primary expert ownership labels.
 
 ## Working Model
 
@@ -58,7 +58,7 @@ hints, not proof.
 
 ## Expert Depth Standard
 
-Expert agents should behave like class specialists. For each scenario, use the
+Expert agents should behave like family specialists. For each scenario, use the
 manifest's playbook to inspect obscure variants, second-order paths, runtime
 configuration, sibling sinks, and false-positive traps specific to that root
 cause. A shallow "source reaches sink" answer is incomplete unless it also
@@ -79,7 +79,7 @@ are independently vulnerable.
 4. Check guards in the context where the sink consumes data.
 5. Decide `verified`, `candidate`, `rejected`, or `needs_context`.
 6. Record sibling sinks with the same root cause before stopping.
-7. Queue cross-class leads instead of burying them in prose.
+7. Queue cross-family leads instead of burying them in prose.
 8. Write concise logs covering actions, evidence, decisions, status, and next
    handoffs. Do not log private chain-of-thought.
 
@@ -89,7 +89,7 @@ Scenario results should include:
 
 - `status`: `verified`, `candidate`, `rejected`, or `needs_context`.
 - `expert`: the expert id.
-- `primary_vulnerability_class`: the root-cause class owned by the expert.
+- `primary_vulnerability_class`: the root-cause family or subtype owned by the expert.
 - `summary`: concise decision.
 - `evidence`: exact source, sink, guard, and impact references.
 - `surface_class_coverage`: reviewed surfaces and per-class decisions.

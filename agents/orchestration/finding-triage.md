@@ -14,7 +14,7 @@ parameters, sinks, or trust boundaries are independently vulnerable.
 
 - One finding per distinct root cause and impact boundary.
 - Merge siblings only when they share the same vulnerable primitive and impact.
-- Keep cross-class chains explicit in the finding and queue any unverified
+- Keep cross-family chains explicit in the finding and queue any unverified
   secondary class.
 - Rejected and candidate leads are durable artifacts, not discarded notes.
 

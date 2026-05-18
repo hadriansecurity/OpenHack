@@ -60,8 +60,8 @@ whitebox run-recon demo demo-001 --all-agents
 
 # Or scope the run to selected experts
 whitebox run-recon demo demo-001 \
-  --expert sql-injection \
-  --expert xss-template-injection
+  --expert injection \
+  --expert broken-access-control
 
 # Optional: enrich recon with bundled Semgrep rules
 whitebox run-recon demo demo-001 --all-agents --semgrep
@@ -188,7 +188,8 @@ evidence was used, what decision was made, status, and handoffs.
 ## Command Reference
 
 Run commands from the repository root (or set `WHITEBOX_AGENT_ROOT`). The
-`python3 scripts/commands/*.py` wrappers remain supported for legacy workflows.
+`python3 scripts/commands/*.py` wrappers remain supported alongside the
+`whitebox` CLI.
 
 | Command | Purpose |
 |---|---|
@@ -257,7 +258,7 @@ config/                            Registry, defaults, and schema contracts.
 agents/
   orchestration/                   Run lifecycle, scenario routing, finding triage.
   reconnaissance/                  Source recon agents that emit recon items.
-  experts/                         Root-cause vulnerability-class experts.
+  experts/                         OWASP/MITRE-aligned root-cause family experts.
   shared/                          Protocol all agents follow.
 scripts/commands/                  Compatibility wrappers for the public commands.
 src/whitebox_pentesting_agent/     Shared implementation and packaged CLI.
@@ -275,21 +276,42 @@ wrappers for model harnesses and existing workflows.
 
 Agents are Markdown manifests — intentionally compact, but each expert must be
 operational. It states when it should receive a scenario, what evidence proves or
-rejects the vulnerability class, common false positives, and where to handoff
-cross-class leads.
+rejects the root-cause family, common false positives, and where to handoff
+cross-family leads.
 
 The workflow roles:
 
 - **Orchestration agents** own run lifecycle, scenario routing, and finding triage.
 - **Reconnaissance agents** find surfaces — routes, files, sinks, auth boundaries,
   upload paths, parser entrypoints, manifests, and debug/admin areas.
-- **Expert agents** own root-cause vulnerability classes. The current registry
-  defines **30 expert classes** in `config/agents.json`.
+- **Expert agents** own OWASP/MITRE-aligned root-cause families. The current
+  registry defines **12 expert families** in `config/agents.json`.
+
+The expert families are:
+
+| Expert ID | Standard-aligned title |
+|---|---|
+| `broken-access-control` | A01:2025 - Broken Access Control |
+| `security-misconfiguration` | A02:2025 - Security Misconfiguration |
+| `software-supply-chain-failures` | A03:2025 - Software Supply Chain Failures |
+| `cryptographic-failures` | A04:2025 - Cryptographic Failures |
+| `injection` | A05:2025 - Injection |
+| `memory-buffer-boundary-errors` | CWE-119 - Improper Restriction of Operations within the Bounds of a Memory Buffer |
+| `insecure-design` | A06:2025 - Insecure Design |
+| `authentication-failures` | A07:2025 - Authentication Failures |
+| `software-data-integrity-failures` | A08:2025 - Software or Data Integrity Failures |
+| `sensitive-information-exposure` | CWE-200 - Exposure of Sensitive Information to an Unauthorized Actor |
+| `path-traversal-unrestricted-upload` | CWE-22 / CWE-434 - Path Traversal and Unrestricted Upload |
+| `unrestricted-resource-consumption` | API4:2023 / CWE-770 - Unrestricted Resource Consumption |
 
 > **Surfaces are not expert ownership labels.** API, GraphQL, upload, parser,
 > admin, and native boundaries are recon signals that fan out to multiple
 > experts. Impacts like RCE or account takeover are finding impacts. A verified
 > finding must name one primary root-cause owner.
+>
+> SSRF is covered inside `broken-access-control` because OWASP Top 10:2025 maps
+> CWE-918 to A01:2025; the dedicated outbound-client checklist is preserved in
+> that expert rather than kept as a separate family.
 
 ---
 

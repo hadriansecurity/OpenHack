@@ -52,7 +52,7 @@ constraint.
 
 Do not route by keyword alone. Route by sink, trust boundary, reachable behavior,
 and deployment context. Fan out one recon item to multiple experts when distinct
-root-cause classes are plausible. Never choose "the best" expert for a path when
+root-cause families are plausible. Never choose "the best" expert for a path when
 several root causes are credible; create one scenario per relevant expert. Do
 not collapse different endpoints, parameters, roles, storage paths, parsers, or
 deployment aliases just because they may share a remediation theme.

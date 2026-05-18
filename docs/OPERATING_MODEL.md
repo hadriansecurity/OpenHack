@@ -50,12 +50,12 @@ Agents using this workspace should summarize those points and ask the human
 whether to proceed before running the next phase, unless the human has already
 approved a continuous batch.
 
-Expert agents own vulnerability classes. Recon surfaces such as API, GraphQL,
-upload, admin, parser, or native boundaries are not deterministically assigned to
-experts by scripts. They are routed by the scenario-router agent, and the final
-finding must name one primary root-cause owner. The current registry is broad
-enough for general source-guided review, while still allowing cross-class
-handoffs when one bug enables another.
+Expert agents own 12 OWASP/MITRE-aligned root-cause families. Recon surfaces such
+as API, GraphQL, upload, admin, parser, or native boundaries are not
+deterministically assigned to experts by scripts. They are routed by the
+scenario-router agent, and the final finding must name one primary root-cause
+owner. The current registry is broad enough for general source-guided review,
+while still allowing cross-family handoffs when one bug enables another.
 
 `config/agents.json` uses `routing_signals` to connect recon evidence to
 plausible experts. These signals are intentionally broad enough to find review

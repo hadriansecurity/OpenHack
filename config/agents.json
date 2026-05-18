@@ -8,35 +8,125 @@
     {"id": "source-recon", "phase": "recon", "emits": ["recon_item"], "signals": ["route", "sink", "manifest", "auth-boundary", "secret-surface", "file"]}
   ],
   "experts": [
-    {"id": "admin-debug-install-exposure", "category": "exposure", "ownership": "root_cause", "routing_signals": ["admin", "administrator", "debug", "diagnostics", "installer", "install", "setup", "phpinfo", "healthcheck", "status", "profiler", "console", "example", "sample", "test-endpoint", "default-password", "directory-listing", "backup", "staging"]},
-    {"id": "authentication-bypass", "category": "access", "ownership": "root_cause", "routing_signals": ["login", "signin", "sign-in", "password-reset", "reset-token", "forgot-password", "mfa", "2fa", "otp", "session", "cookie", "remember-me", "magic-link", "sso", "impersonate", "auth-callback", "account-linking", "verify-email"]},
-    {"id": "authorization-idor", "category": "access", "ownership": "root_cause", "routing_signals": ["object-id", "resource-id", "user_id", "userid", "account_id", "tenant_id", "org_id", "project_id", "courseid", "groupid", "contextid", "itemid", "instanceid", "owner", "ownership", "admin-action", "bulk-action", "access-control", "permission", "role-check", "acl"]},
-    {"id": "business-logic-workflow", "category": "logic", "ownership": "root_cause", "routing_signals": ["state-transition", "approval", "approve", "reject", "cancel", "refund", "checkout", "payment", "coupon", "quota", "limit", "replay", "idempotency", "order-status", "workflow", "step", "sequence", "balance", "transfer", "entitlement", "upgrade", "downgrade"]},
-    {"id": "cache-proxy-host-poisoning", "category": "infrastructure", "ownership": "root_cause", "routing_signals": ["host-header", "forwarded-header", "x-forwarded-host", "forwarded", "cache-key", "proxy", "reverse-proxy", "cdn", "varnish", "nginx", "location", "upstream", "surrogate-key", "vary", "origin", "absolute-url", "base-url", "canonical-url"]},
-    {"id": "command-injection", "category": "injection", "ownership": "root_cause", "routing_signals": ["process", "subprocess", "shell", "shell_exec", "system", "exec", "spawn", "popen", "passthru", "cli-wrapper", "converter", "imagemagick", "ffmpeg", "tar", "zip", "git", "curl", "command", "argument", "shell=true"]},
-    {"id": "cors-clickjacking-security-headers", "category": "browser", "ownership": "root_cause", "routing_signals": ["cors", "access-control-allow-origin", "allow-credentials", "origin", "frame", "iframe", "clickjacking", "x-frame-options", "frame-ancestors", "csp", "content-security-policy", "samesite", "secure-cookie", "security-headers", "referrer-policy", "permissions-policy"]},
-    {"id": "crypto-session-token", "category": "crypto", "ownership": "root_cause", "routing_signals": ["token", "session", "jwt", "jws", "jwe", "signed-cookie", "hmac", "signature", "nonce", "random", "randomness", "uuid", "secret-key", "encryption", "decrypt", "password-hash", "bcrypt", "reset-token", "api-key", "key-rotation"]},
-    {"id": "csrf-state-change", "category": "browser", "ownership": "root_cause", "routing_signals": ["csrf", "state-change", "post-action", "delete-action", "cookie-auth", "csrf-token", "origin-check", "referer-check", "same-site", "samesite", "form-submit", "unsafe-method", "mutation", "update-profile", "change-password", "transfer"]},
-    {"id": "dependency-vulnerabilities", "category": "supply-chain", "ownership": "root_cause", "routing_signals": ["manifest", "lockfile", "package-lock", "yarn.lock", "pnpm-lock", "composer.lock", "gemfile.lock", "requirements.txt", "poetry.lock", "pipfile.lock", "cargo.lock", "go.sum", "gradle.lockfile", "pom.xml", "vendored-library", "dependency", "supply-chain", "vulnerable-package"]},
-    {"id": "deserialization-object-injection", "category": "injection", "ownership": "root_cause", "routing_signals": ["deserialize", "unserialize", "pickle", "yaml.load", "objectinputstream", "readobject", "marshal", "signed-blob", "serialized", "phar", "jsonpickle", "binaryformatter", "session-store", "gadget"]},
-    {"id": "excessive-data-exposure", "category": "exposure", "ownership": "root_cause", "routing_signals": ["serializer", "projection", "include", "expand", "fields", "graphql-selection", "select", "export", "csv", "report", "api-response", "dto", "viewmodel", "admin-field", "pii", "email", "ssn", "address", "phone", "profile", "bulk-download"]},
-    {"id": "ldap-nosql-xpath-injection", "category": "injection", "ownership": "root_cause", "routing_signals": ["ldap", "ldap_search", "nosql", "mongo", "findone", "aggregate", "bson", "xpath", "xquery", "query-dsl", "filter", "where", "elasticsearch", "opensearch", "redis", "injection-filter", "search-query"]},
-    {"id": "logging-error-disclosure", "category": "exposure", "ownership": "root_cause", "routing_signals": ["stack-trace", "exception", "traceback", "verbose-error", "error-page", "log-viewer", "debug-output", "console", "logging", "logger", "panic", "warning", "phpinfo", "diagnostics", "source-map", "sourcemap", "internal-path"]},
-    {"id": "mass-assignment-parameter-tampering", "category": "input-validation", "ownership": "root_cause", "routing_signals": ["model-binding", "bind", "overposting", "patch", "update", "fillable", "assign", "attrs", "attributes", "params", "request-body", "dynamic-field", "form-field", "profile-update", "role", "is_admin", "permission", "whitelist", "blacklist"]},
-    {"id": "native-memory-safety", "category": "native", "ownership": "root_cause", "routing_signals": ["native", "cpp", "cxx", "unsafe-rust", "ffi", "ctypes", "cgo", "buffer", "memcpy", "strcpy", "sprintf", "malloc", "free", "pointer", "native-parser", "binary", "image-parser", "archive-parser", "bounds", "overflow", "use-after-free"]},
-    {"id": "oauth-saml-identity-federation", "category": "identity", "ownership": "root_cause", "routing_signals": ["oauth", "oidc", "saml", "sso", "shibboleth", "account-linking", "callback", "redirect_uri", "state", "nonce", "assertion", "id_token", "access_token", "refresh_token", "audience", "issuer", "jwks", "acs", "relaystate", "federation", "mfa", "login-callback"]},
-    {"id": "open-redirect-header-injection", "category": "response", "ownership": "root_cause", "routing_signals": ["redirect", "return_url", "next", "continue", "target", "location", "header", "response-header", "content-disposition", "filename", "url-param", "open-redirect", "crlf", "newline", "header-injection", "external-url", "callback-url"]},
-    {"id": "path-traversal-file-access", "category": "file", "ownership": "root_cause", "routing_signals": ["download", "path", "filename", "filepath", "include", "archive", "zip-slip", "extract", "readfile", "send_file", "file_get_contents", "directory", "attachment", "template-path", "storage-key", "object-key", "local-file", "traversal", "dotdot"]},
-    {"id": "prototype-pollution-object-pollution", "category": "injection", "ownership": "root_cause", "routing_signals": ["prototype", "__proto__", "constructor", "deep-merge", "merge", "extend", "assign", "setpath", "path-setter", "lodash", "object-key", "querystring", "qs", "json-merge", "defaultsdeep", "recursive-merge", "pollution"]},
-    {"id": "race-condition-concurrency", "category": "logic", "ownership": "root_cause", "routing_signals": ["race", "toctou", "concurrent", "concurrency", "idempotency", "retry", "lock", "mutex", "transaction", "double-submit", "job", "queue", "worker", "webhook", "balance", "transfer", "coupon", "inventory", "unique", "constraint"]},
-    {"id": "rate-limit-enumeration-abuse", "category": "abuse", "ownership": "root_cause", "routing_signals": ["rate-limit", "throttle", "brute-force", "enumeration", "otp", "spraying", "login", "reset", "invite", "verification-code", "guessable-id", "search", "autocomplete", "username", "email-check", "token-guess", "captcha", "lockout"]},
-    {"id": "resource-exhaustion-dos", "category": "availability", "ownership": "root_cause", "routing_signals": ["unbounded-input", "expensive-search", "parser", "queue", "regex", "recursion", "pagination", "limit", "upload-size", "decompress", "zip-bomb", "image-resize", "pdf", "xml", "json", "memory", "timeout", "loop", "bulk", "export"]},
-    {"id": "secrets-exposure", "category": "exposure", "ownership": "root_cause", "routing_signals": ["secret", "token", "password", "api_key", "api-key", "credential", "private-key", "pem", "env", "dotenv", "backup", "config", "key", "access-key", "aws", "gcp", "azure", "webhook-secret"]},
-    {"id": "sql-injection", "category": "injection", "ownership": "root_cause", "routing_signals": ["sql", "raw-query", "query", "execute", "prepared", "parameterized", "where", "order-by", "sort", "dynamic-filter", "like", "concat", "get_records_sql", "knex.raw", "sequelize.literal", "prisma.$queryraw", "jdbc", "db.query", "repository-query"]},
-    {"id": "ssrf-http-client", "category": "network", "ownership": "root_cause", "routing_signals": ["url-fetch", "webhook", "preview", "import-url", "fetch", "requests", "curl", "httpclient", "axios", "got", "proxy", "metadata", "169.254.169.254", "internal-url", "image-url", "avatar-url", "callback", "uri", "redirect-follow", "file-url"]},
-    {"id": "ssti-dynamic-template", "category": "injection", "ownership": "root_cause", "routing_signals": ["render-from-string", "template-name", "expression", "macro", "template", "mustache", "handlebars", "jinja", "twig", "erb", "velocity", "freemarker", "liquid", "ejs", "pug", "blade", "eval-template", "user-template"]},
-    {"id": "unrestricted-file-upload", "category": "file", "ownership": "root_cause", "routing_signals": ["upload", "multipart", "filename", "content-type", "mime", "extension", "file-size", "stored-file", "attachment", "avatar", "import", "csv", "image", "media", "move_uploaded_file", "storage", "bucket", "public-url", "archive", "unzip"]},
-    {"id": "xss-template-injection", "category": "browser", "ownership": "root_cause", "routing_signals": ["xss", "template", "html", "innerhtml", "outerhtml", "dangerouslysetinnerhtml", "ng-bind-html", "v-html", "html_writer", "format_text", "format_string", "param_raw", "param_notags", "stored-content", "markdown", "wysiwyg", "rich-text", "script", "dom"]},
-    {"id": "xxe-xml-parser", "category": "parser", "ownership": "root_cause", "routing_signals": ["xml", "dtd", "entity", "external-entity", "xxe", "soap", "saml", "svg", "docx", "xlsx", "xinclude", "sax", "domdocument", "simplexml", "xmlreader", "documentbuilder", "lxml", "etree", "resolve-entity"]}
+    {
+      "id": "broken-access-control",
+      "title": "A01:2025 - Broken Access Control",
+      "category": "access-control",
+      "standard_refs": ["OWASP A01:2025", "OWASP API1:2023", "OWASP API3:2023", "OWASP API5:2023", "CWE-284", "CWE-862", "CWE-863", "CWE-639", "CWE-918"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "authorization", "access-control", "permission", "role", "acl", "policy", "owner", "ownership", "tenant", "tenant_id", "account_id", "org_id", "project_id", "resource-id", "object-id", "user_id", "userid", "courseid", "groupid", "contextid", "itemid", "instanceid", "admin-action", "bulk-action", "graphql-selection", "serializer", "projection", "include", "expand", "fields", "mass-assignment", "overposting", "model-binding", "fillable", "assign", "attributes", "params", "request-body", "is_admin", "scope", "entitlement", "ssrf", "url-fetch", "webhook", "preview", "import-url", "fetch", "requests", "httpclient", "axios", "got", "metadata", "169.254.169.254", "internal-url", "image-url", "avatar-url", "redirect-follow", "file-url", "oembed", "crawler", "server-side-browser", "pdf-render", "dns", "egress", "xinclude", "xslt", "metadata-service"
+      ]
+    },
+    {
+      "id": "security-misconfiguration",
+      "title": "A02:2025 - Security Misconfiguration",
+      "category": "configuration",
+      "standard_refs": ["OWASP A02:2025", "OWASP API8:2023", "CWE-16", "CWE-601", "CWE-1021"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "admin", "administrator", "debug", "diagnostics", "installer", "install", "setup", "phpinfo", "healthcheck", "status", "profiler", "console", "example", "sample", "test-endpoint", "default-password", "directory-listing", "backup", "staging", "cors", "access-control-allow-origin", "allow-credentials", "origin", "postmessage", "jsonp", "frame", "iframe", "clickjacking", "x-frame-options", "frame-ancestors", "csp", "content-security-policy", "samesite", "secure-cookie", "security-headers", "referrer-policy", "permissions-policy", "host-header", "forwarded-header", "x-forwarded-host", "forwarded", "cache-key", "proxy", "reverse-proxy", "cdn", "varnish", "nginx", "location", "upstream", "surrogate-key", "vary", "absolute-url", "base-url", "canonical-url", "redirect", "return_url", "next", "continue", "response-header", "content-disposition", "crlf", "header-injection", "external-url", "callback-url"
+      ]
+    },
+    {
+      "id": "software-supply-chain-failures",
+      "title": "A03:2025 - Software Supply Chain Failures",
+      "category": "supply-chain",
+      "standard_refs": ["OWASP A03:2025", "CWE-1104", "CWE-494", "CWE-829"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "manifest", "lockfile", "package-lock", "yarn.lock", "pnpm-lock", "composer.lock", "gemfile.lock", "requirements.txt", "poetry.lock", "pipfile.lock", "cargo.lock", "go.sum", "gradle.lockfile", "pom.xml", "vendored-library", "dependency", "supply-chain", "vulnerable-package", "package", "plugin", "container-image", "generated-client", "native-extension", "browser-bundle", "build-script", "registry", "checksum", "digest", "package-hook"
+      ]
+    },
+    {
+      "id": "cryptographic-failures",
+      "title": "A04:2025 - Cryptographic Failures",
+      "category": "crypto",
+      "standard_refs": ["OWASP A04:2025", "CWE-327", "CWE-326", "CWE-330", "CWE-347", "CWE-798"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "crypto", "token", "session", "jwt", "jws", "jwe", "signed-cookie", "hmac", "signature", "nonce", "random", "randomness", "uuid", "secret-key", "encryption", "decrypt", "password-hash", "bcrypt", "reset-token", "api-key", "key-rotation", "certificate", "tls", "private-key", "pem", "iv", "salt", "hash", "webhook-secret", "kid", "audience", "issuer"
+      ]
+    },
+    {
+      "id": "injection",
+      "title": "A05:2025 - Injection",
+      "category": "injection",
+      "standard_refs": ["OWASP A05:2025", "CWE-79", "CWE-89", "CWE-78", "CWE-77", "CWE-94", "CWE-643", "CWE-917"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "sql", "raw-query", "query", "execute", "prepared", "parameterized", "where", "order-by", "sort", "dynamic-filter", "like", "concat", "get_records_sql", "knex.raw", "sequelize.literal", "prisma.$queryraw", "jdbc", "db.query", "repository-query", "ldap", "ldap_search", "nosql", "mongo", "findone", "aggregate", "bson", "xpath", "xquery", "query-dsl", "filter", "elasticsearch", "opensearch", "redis", "process", "subprocess", "shell", "shell_exec", "system", "exec", "spawn", "popen", "passthru", "cli-wrapper", "converter", "imagemagick", "ffmpeg", "tar", "zip", "curl", "command", "argument", "shell=true", "xss", "template", "html", "innerhtml", "outerhtml", "dangerouslysetinnerhtml", "ng-bind-html", "v-html", "html_writer", "format_text", "format_string", "param_raw", "param_notags", "stored-content", "markdown", "wysiwyg", "rich-text", "script", "dom", "render-from-string", "template-name", "expression", "macro", "mustache", "handlebars", "jinja", "twig", "erb", "velocity", "freemarker", "liquid", "ejs", "pug", "blade", "eval-template", "user-template", "prototype", "__proto__", "constructor", "deep-merge", "merge", "extend", "setpath", "path-setter", "lodash", "querystring", "qs", "json-merge", "defaultsdeep", "recursive-merge", "pollution", "eval"
+      ]
+    },
+    {
+      "id": "memory-buffer-boundary-errors",
+      "title": "CWE-119 - Improper Restriction of Operations within the Bounds of a Memory Buffer",
+      "category": "memory-safety",
+      "standard_refs": ["CWE-119", "CWE-787", "CWE-125", "CWE-416", "CWE-190"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "native", "cpp", "cxx", "unsafe-rust", "ffi", "ctypes", "cgo", "jni", "n-api", "buffer", "memcpy", "memmove", "strcpy", "sprintf", "malloc", "free", "pointer", "native-parser", "binary", "image-parser", "archive-parser", "bounds", "overflow", "underflow", "use-after-free", "out-of-bounds", "integer-overflow", "format-string", "raw-pointer", "unsafe", "allocator", "lifetime"
+      ]
+    },
+    {
+      "id": "insecure-design",
+      "title": "A06:2025 - Insecure Design",
+      "category": "design",
+      "standard_refs": ["OWASP A06:2025", "OWASP API6:2023", "CWE-840", "CWE-841", "CWE-362", "CWE-307"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "state-transition", "approval", "approve", "reject", "cancel", "refund", "checkout", "payment", "coupon", "quota", "limit", "replay", "idempotency", "order-status", "workflow", "step", "sequence", "balance", "transfer", "entitlement", "upgrade", "downgrade", "race", "toctou", "concurrent", "concurrency", "retry", "lock", "mutex", "transaction", "double-submit", "job", "queue", "worker", "webhook", "inventory", "unique", "constraint", "rate-limit", "throttle", "brute-force", "enumeration", "otp", "spraying", "invite", "verification-code", "guessable-id", "search", "autocomplete", "username", "email-check", "token-guess", "captcha", "lockout", "business-flow", "abuse"
+      ]
+    },
+    {
+      "id": "authentication-failures",
+      "title": "A07:2025 - Authentication Failures",
+      "category": "authentication",
+      "standard_refs": ["OWASP A07:2025", "OWASP API2:2023", "CWE-287", "CWE-306", "CWE-352", "CWE-384"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "login", "signin", "sign-in", "password-reset", "reset-token", "forgot-password", "mfa", "2fa", "otp", "session", "cookie", "remember-me", "magic-link", "sso", "impersonate", "auth-callback", "account-linking", "verify-email", "oauth", "oidc", "saml", "shibboleth", "callback", "redirect_uri", "state", "nonce", "assertion", "id_token", "access_token", "refresh_token", "audience", "issuer", "jwks", "acs", "relaystate", "federation", "login-callback", "csrf", "csrf-token", "origin-check", "referer-check", "same-site", "form-submit", "unsafe-method", "mutation", "update-profile", "change-password", "cookie-auth", "pkce", "device-trust", "step-up", "logout"
+      ]
+    },
+    {
+      "id": "software-data-integrity-failures",
+      "title": "A08:2025 - Software or Data Integrity Failures",
+      "category": "integrity",
+      "standard_refs": ["OWASP A08:2025", "CWE-502", "CWE-345", "CWE-353", "CWE-494"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "deserialize", "unserialize", "pickle", "yaml.load", "objectinputstream", "readobject", "marshal", "signed-blob", "serialized", "phar", "jsonpickle", "binaryformatter", "session-store", "gadget", "polymorphic", "trusted-data", "webhook-signature", "queue-payload", "cache-state", "plugin-update", "software-update", "artifact", "checksum", "signature-verification", "schema-validation", "safe-loader", "object-mapper", "integrity", "provenance", "xml", "dtd", "entity", "external-entity", "xxe", "soap", "saml", "svg", "docx", "xlsx", "xinclude", "sax", "domdocument", "simplexml", "xmlreader", "documentbuilder", "lxml", "etree", "resolve-entity"
+      ]
+    },
+    {
+      "id": "sensitive-information-exposure",
+      "title": "CWE-200 - Exposure of Sensitive Information to an Unauthorized Actor",
+      "category": "exposure",
+      "standard_refs": ["CWE-200", "CWE-209", "CWE-532", "CWE-538", "CWE-798"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "secret", "token", "password", "api_key", "api-key", "credential", "private-key", "pem", "env", "dotenv", "backup", "config", "key", "access-key", "aws", "gcp", "azure", "webhook-secret", "stack-trace", "exception", "traceback", "verbose-error", "error-page", "log-viewer", "debug-output", "logging", "logger", "panic", "warning", "source-map", "sourcemap", "internal-path", "pii", "email", "ssn", "address", "phone", "profile", "database-url", "crash-report", "audit-export", "telemetry"
+      ]
+    },
+    {
+      "id": "path-traversal-unrestricted-upload",
+      "title": "CWE-22 / CWE-434 - Path Traversal and Unrestricted Upload",
+      "category": "file-storage",
+      "standard_refs": ["CWE-22", "CWE-434", "CWE-23", "CWE-73"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "download", "path", "filename", "filepath", "include", "archive", "zip-slip", "tar-slip", "extract", "readfile", "send_file", "file_get_contents", "directory", "attachment", "template-path", "storage-key", "object-key", "local-file", "traversal", "dotdot", "upload", "multipart", "content-type", "mime", "extension", "file-size", "stored-file", "avatar", "import", "csv", "image", "media", "move_uploaded_file", "storage", "bucket", "public-url", "unzip", "signed-url", "object-storage", "symlink", "content-disposition"
+      ]
+    },
+    {
+      "id": "unrestricted-resource-consumption",
+      "title": "API4:2023 / CWE-770 - Unrestricted Resource Consumption",
+      "category": "availability",
+      "standard_refs": ["OWASP API4:2023", "CWE-770", "CWE-400", "CWE-1333"],
+      "ownership": "root_cause_family",
+      "routing_signals": [
+        "unbounded-input", "expensive-search", "parser", "queue", "regex", "recursion", "pagination", "limit", "upload-size", "decompress", "zip-bomb", "image-resize", "pdf", "xml", "json", "memory", "timeout", "loop", "bulk", "export", "resource-exhaustion", "dos", "denial-of-service", "complexity", "fan-out", "worker", "retry", "backpressure", "quota", "provider-cost", "email", "sms", "ocr", "thumbnail", "conversion"
+      ]
+    }
   ]
 }

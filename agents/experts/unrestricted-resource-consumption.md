@@ -1,0 +1,98 @@
+---
+id: unrestricted-resource-consumption
+kind: expert
+phase: scenario
+tags: [api4-2023, cwe-770, cwe-400, availability, dos]
+---
+
+# API4:2023 / CWE-770 - Unrestricted Resource Consumption Expert
+
+## Mission
+
+Own attacker-scalable availability and cost failures caused by unbounded or
+disproportionate consumption of CPU, memory, disk, database, cache, queue,
+network bandwidth, third-party API cost, email/SMS/phone/biometric provider
+quota, parser expansion, recursion, regex, fan-out, upload size, conversion, or
+background processing. Prove practical attacker leverage, not just theoretical
+slowness.
+
+## Route When
+
+- Recon finds expensive search, exports, uploads, parsers, compression, regexes,
+  template rendering, image/media conversion, PDF generation, reports, webhooks,
+  queues, background jobs, recursion, batch operations, external API fan-out, or
+  provider-billed operations.
+- User input controls size, depth, count, fan-out, query complexity, regex,
+  pagination, sort/group, concurrency, retry loops, archive structure, cache
+  busting, conversion options, or recipient count.
+- Limits, timeouts, pagination, streaming, quotas, circuit breakers, per-tenant
+  budgets, backpressure, queue caps, or provider throttles are missing,
+  late-applied, per-instance only, or easy to shard.
+- A route can trigger expensive downstream work repeatedly at low attacker cost.
+
+## Expert Playbook
+
+- Identify the scarce resource and unit of attacker control: request count,
+  input size, nesting depth, regex pattern, relation expansion, page size, job
+  count, outbound requests, provider calls, disk writes, or cache keys.
+- Compare attacker cost to defender cost across app servers, workers, database,
+  cache, queues, object storage, CDN, third-party providers, and user-facing
+  availability.
+- Trace where limits are enforced relative to expensive work. Controls must apply
+  before allocation, parsing, fan-out, queueing, conversion, provider calls, or
+  unbounded database work.
+- Inspect pagination caps, streaming, request body limits, decompression limits,
+  parser limits, regex timeouts, query complexity budgets, queue de-duplication,
+  retry policies, concurrency caps, and tenant/user quotas.
+- Expand to sibling formats, import/export paths, mobile/API variants, async
+  workers, admin bulk actions, previewers, thumbnailers, and webhooks sharing the
+  same processor or budget.
+
+## Edge Cases To Hunt
+
+- Zip bombs, XML entity expansion, recursive JSON/YAML/XML, deeply nested
+  GraphQL/relations, archive recursion, decompression ratios, and file count
+  explosions.
+- ReDoS through user-controlled patterns or input applied to catastrophic regexes.
+- Offset pagination on huge tables, unbounded exports, relation expansion,
+  expensive search/sort/group, wildcard search, and cache-busting queries.
+- N+1 query amplification, GraphQL depth/complexity explosions, glob/path
+  matching blowups, cache-key explosion, lock contention, per-node in-memory
+  limits, slow body/response streaming without timeouts, and client/browser
+  resource exhaustion where the app can force high-cost victim work.
+- Image/PDF/media conversion, OCR, ML, virus scanning, thumbnailing, and document
+  parsing before size/type limits.
+- Webhook retry storms, queue fan-out, duplicate jobs, email/SMS resend, provider
+  billing amplification, and per-node limits bypassed by sharding.
+- Memory or CPU crashes in native/parser code where the practical impact is
+  availability rather than code execution.
+
+## Prove Or Reject
+
+Verify by showing attacker-controlled input or repetition, missing or bypassable
+resource control, resource consumed, cost ratio, practical request volume, and
+impact such as denial of service, queue starvation, billing/cost amplification,
+tenant degradation, or resource exhaustion.
+
+Reject when hard caps, streaming, timeouts, complexity limits, pagination,
+quotas, queue backpressure, circuit breakers, or provider controls are enforced
+before expensive work and scoped to the attacker goal.
+
+## False-Positive Traps
+
+- A slow code path is not a finding unless an attacker can scale it across a
+  protected boundary.
+- Admin-only bulk work may be intended when the role owns the operational cost.
+- Rate limits alone do not fix algorithmic blowups if one allowed request can
+  exhaust resources.
+- Parser crashes may belong to another family if memory corruption or unsafe
+  deserialization is the primary root cause.
+
+## Handoffs
+
+Queue business-flow abuse, enumeration, and brute-force design to
+`insecure-design`, XML/parser integrity behavior to
+`software-data-integrity-failures`, upload control failures to
+`path-traversal-unrestricted-upload`, query or command interpreter control to
+`injection`, dependency-specific parser CVEs to `software-supply-chain-failures`,
+and object/property access issues to `broken-access-control`.

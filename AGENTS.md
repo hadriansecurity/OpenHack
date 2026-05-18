@@ -48,7 +48,7 @@ role, parser, storage path, trust boundary, or deployment alias. If the backlog
 is small, record coverage notes that explain why the evidence is genuinely
 small. One scenario has one primary expert, but the same file, path, or recon
 item must be routed to every relevant expert as separate scenarios. Do not let a
-single expert assignment suppress other plausible root-cause classes. Once a
+single expert assignment suppress other plausible root-cause families. Once a
 backlog exists, ask once to run the entire unfinished backlog as a continuous
 scenario loop; then iterate over every `scenarios/backlog/S*.json` item
 individually. Do not ask again at internal ranges such as `S021-S070`; those are
