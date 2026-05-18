@@ -22,13 +22,13 @@ the repository.
 The required first durable actions are phase checkpoints:
 
 1. Create or identify a run under `runs/<target>/<run-id>/`.
-2. Run `scripts/commands/init-run.py` for new targets.
+2. Run `whitebox init-run` for new targets.
 3. Summarize the created run and ask whether to proceed.
-4. Run `scripts/commands/run-recon.py` after approval.
+4. Run `whitebox run-recon` after approval.
 5. Summarize recon output and ask whether to proceed.
-6. Run `scripts/commands/create-scenarios.py` after approval.
+6. Run `whitebox create-scenarios` after approval.
 7. Have the scenario-router answer the generated prompt, then record that JSON
-   with `scripts/commands/record-scenario-backlog.py`.
+   with `whitebox record-scenario-backlog`.
    Write intermediate router, scenario, and triage result files only under
    `runs/<target>/<run-id>/`, never in the repository root, target checkout,
    sibling runs, `/tmp`, or any other path outside the designated run folder.
@@ -37,11 +37,11 @@ The required first durable actions are phase checkpoints:
    scenario still needs its own rendered prompt, source review, evidence, and
    result.
 9. Record expert results and finding candidates with
-   `scripts/commands/record-scenario-result.py`.
+   `whitebox record-scenario-result`.
 10. Summarize candidate count and ask once to run the entire unfinished finding
     triage backlog.
 11. Render one finding-triage prompt per candidate and record one triage result
-    per candidate with `scripts/commands/record-finding-triage.py`.
+    per candidate with `whitebox record-finding-triage`.
 
 Expert analysis outside a recorded scenario is allowed only to produce router
 input, candidate queue notes, or a `needs_context` explanation. Verified

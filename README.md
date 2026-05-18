@@ -207,9 +207,7 @@ evidence was used, what decision was made, status, and handoffs.
 
 ## Command Reference
 
-Run commands from the repository root (or set `WHITEBOX_AGENT_ROOT`). The
-`python3 scripts/commands/*.py` wrappers remain supported alongside the
-`whitebox` CLI.
+Run commands from the repository root (or set `WHITEBOX_AGENT_ROOT`).
 
 | Command | Purpose |
 |---|---|
@@ -298,15 +296,11 @@ agents/
   reconnaissance/                  Source recon agents that emit recon items.
   experts/                         OWASP/MITRE-aligned root-cause family experts.
   shared/                          Protocol all agents follow.
-scripts/commands/                  Compatibility wrappers for the public commands.
 src/whitebox_pentesting_agent/     Shared implementation and editable-install CLI.
 templates/                         Scenario, result, finding, and triage templates.
 docs/                              Operating model and quickstart notes.
 runs/                              Generated run workspaces (gitignored).
 ```
-
-Shared Python lives in `src/`; `scripts/commands/` files remain as stable command
-wrappers for model harnesses and existing workflows.
 
 ---
 
