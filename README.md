@@ -9,12 +9,14 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 
-`whitebox-pentesting-agent` is built around agents, but the durable state is plain
-files: cloned source, recon items, scenario prompts, scenario results, findings,
-and logs. It runs inside an existing model harness — Claude Code, Codex, Cursor,
-or a custom runner — which provides the model execution, terminal, repository
-access, and human-in-the-loop approval. This tool provides the durable workflow
-and review artifacts.
+`whitebox-pentesting-agent` is a set of agents and tools that mimics how the
+Hadrian research team performs automated vulnerability research. The methodology
+has been adjusted so it can run inside a common model harness — Claude Code,
+Codex, Cursor, or a custom runner — while keeping durable state in plain files:
+cloned source, recon items, scenario prompts, scenario results, findings, and
+logs. The harness provides model execution, terminal access, repository access,
+and human-in-the-loop approval; this tool provides the durable workflow and
+review artifacts.
 
 **The core idea:** checkpointed, scenario-first review. Recon discovers surfaces,
 a router agent turns them into scoped scenarios, expert agents prove or reject
