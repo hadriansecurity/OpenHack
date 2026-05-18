@@ -18,13 +18,18 @@ def main():
     args = parser.parse_args()
     scenarios = record_backlog(args.target, args.run_id, args.router_result_json)
     path = run_path(args.target, args.run_id)
-    first = scenarios[0]["id"] if scenarios else "S001"
     print(format_checkpoint(
         "Record Scenario Backlog",
         f"Recorded {len(scenarios)} scenario assignments from router output.",
         artifacts=[path / "scenarios" / "index.jsonl", path / "scenarios" / "backlog"],
-        review="Confirm backlog size, coverage decisions, and expert fan-out before expert review.",
-        next_command=f"python3 scripts/commands/render-scenario-prompt.py {args.target} {args.run_id} {first}",
+        review=(
+            "Confirm backlog size, coverage decisions, and expert fan-out, then "
+            "ask whether to run all recorded scenarios as one expert-review batch."
+        ),
+        next_note=(
+            "After approval, render the backlog prompts, review every unfinished "
+            "scenario, and record the results as a bundle."
+        ),
     ))
 
 
