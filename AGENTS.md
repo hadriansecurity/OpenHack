@@ -55,6 +55,23 @@ write `scenarios/finished/S*.json` after reading that scenario prompt and the
 relevant source. If the full backlog cannot be reviewed, stop and report the
 remaining scenario IDs instead of marking them finished.
 
+Every scenario must be run by its own subagent. The rendered
+`runs/<target>/<run-id>/scenarios/backlog/S*.md` file is the exact prompt for
+that scenario's subagent. The orchestrator may schedule subagents, collect their
+JSON answers, and record those answers, but it must not answer multiple
+scenarios itself, synthesize results from a template, or mark scenarios finished
+without a returned per-scenario subagent review. A bundled result file may only
+contain a small set of already-returned subagent answers; it is never a shortcut
+for running scenarios.
+
+For efficiency, the orchestrator may group unfinished scenarios by expert and use
+`python3 scripts/commands/next-expert-queue.py <target> <run-id> --expert <expert> --limit <n>`
+to choose a bounded dispatch set. Expert grouping is scheduling only: an expert
+queue is not an expert batch review, and no subagent may produce results for
+more than one scenario. Each result must include `review_mode:
+"per-scenario-subagent"`, a unique `subagent_id`, the rendered prompt hash, the
+reviewed source files, and evidence snippets that match cited source lines.
+
 For an existing run, inspect `run-config.yaml`, `plan.md`, `recon-output/`,
 `scenarios/index.jsonl`, `scenarios/backlog/`, `scenarios/finished/`, and
 `findings/` to determine the next missing phase. Summarize the current state and

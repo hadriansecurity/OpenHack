@@ -42,6 +42,12 @@ this expert beyond its root cause.
 
 Write JSON with:
 
+- `scenario_id`
+- `review_mode`: `per-scenario-subagent`
+- `subagent_id`: a unique identifier for the one subagent that reviewed this
+  scenario
+- `scenario_prompt_sha256`: SHA-256 of this rendered `S*.md` prompt file
+- `reviewed_files`: source files this subagent actually read
 - `status`: `verified`, `candidate`, `rejected`, or `needs_context`
 - `expert`
 - `summary`
@@ -50,6 +56,11 @@ Write JSON with:
 - `same_root_expansion`
 - `candidate_queue_entries`
 - `findings`
+
+Every `evidence` item must cite a reviewed source file with `path`, `line`,
+`snippet`, and `note`. The `snippet` must be copied from the cited source line;
+the recorder and validator reject results whose snippets do not match the
+source checkout.
 
 Prefer width: one verified scenario may emit multiple findings when distinct
 parameters, endpoints, sinks, roles, or deployment paths are independently
