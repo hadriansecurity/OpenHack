@@ -1,0 +1,15 @@
+# Contributing
+
+Thanks for helping improve `whitebox-pentesting-agent`.
+
+Before opening a pull request:
+
+- Keep generated run artifacts out of commits. `runs/**`, target checkouts, and
+  review outputs are local data.
+- Keep public command wrappers small. Shared behavior belongs in
+  `src/whitebox_pentesting_agent/`.
+- Preserve the durable workflow: `recon item -> scenario -> result -> finding`.
+- Run `python3 scripts/commands/validate-run.py` before submitting changes.
+
+The compatibility scripts under `scripts/commands/` remain supported, but new
+integrations should prefer the packaged `whitebox` CLI.

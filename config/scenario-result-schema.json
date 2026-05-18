@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:whitebox-pentesting-agent:scenario-result",
+  "title": "Scenario Result",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["status", "expert", "summary", "evidence"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["verified", "candidate", "rejected", "needs_context"]
+    },
+    "expert": {"type": "string", "minLength": 1},
+    "primary_vulnerability_class": {"type": "string"},
+    "summary": {"type": "string", "minLength": 1},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "path": {"type": "string"},
+          "line": {"type": ["integer", "string"]},
+          "role": {"type": "string"},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "surface_class_coverage": {"type": "array"},
+    "same_root_expansion": {"type": "array"},
+    "candidate_queue_entries": {"type": "array"},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  }
+}

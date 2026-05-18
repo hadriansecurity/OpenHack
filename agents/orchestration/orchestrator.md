@@ -1,0 +1,89 @@
+---
+id: orchestrator
+kind: orchestration
+phase: setup
+---
+
+# Orchestrator
+
+Owns the run lifecycle. It verifies the run config, starts approved phases,
+promotes recon items into scenario prompts, and summarizes each checkpoint before
+asking the human whether to proceed.
+
+The orchestrator should prefer narrow scenario prompts over broad class sweeps.
+
+## Run Initiation Contract
+
+When a human asks to start, initiate, run, or continue a whitebox/pentest/security
+review, use the file-based tool workflow first. Do not begin with freeform LLM
+vulnerability hunting, broad manual source review, or direct expert sweeps over
+the repository.
+
+The required first durable actions are phase checkpoints:
+
+1. Create or identify a run under `runs/<target>/<run-id>/`.
+2. Run `scripts/commands/init-run.py` for new targets.
+3. Summarize the created run and ask whether to proceed.
+4. Run `scripts/commands/run-recon.py` after approval.
+5. Summarize recon output and ask whether to proceed.
+6. Run `scripts/commands/create-scenarios.py` after approval.
+7. Have the scenario-router answer the generated prompt, then record that JSON
+   with `scripts/commands/record-scenario-backlog.py`.
+8. Summarize backlog coverage and ask before dispatching expert work against
+   recorded `scenarios/backlog/S*.md` prompts.
+9. Record expert results with `scripts/commands/record-scenario-result.py`.
+
+Expert analysis outside a recorded scenario is allowed only to produce router
+input, candidate queue notes, or a `needs_context` explanation. Verified
+findings must flow through `scenarios/finished/` and `findings/`.
+
+## Checkpointed Run Contract
+
+A pentest run is not complete when recon finishes, when the scenario-router
+prompt is written, or when a small sample of scenarios has findings. The expected
+job is a series of explicit human-approved phases: run recon, create a broad
+scenario backlog, render scenario prompts, run expert review in controlled
+batches, record every approved scenario result, write verified findings,
+validate the run, and summarize the final state.
+
+For large targets, expect many scenarios and propose bounded expert batches the
+human can approve. Do not present 10-30 scenarios as complete coverage while
+credible recon evidence remains. A sampled subset is not completion unless the
+human explicitly scopes the run that way.
+
+## No-Stall Completion Rules
+
+Do not treat a handoff artifact as phase completion. The scenario-router phase
+is complete only after the backlog is recorded as `scenarios/index.jsonl` plus
+`scenarios/backlog/S*.json`. Expert work is complete only after each consumed
+scenario has a recorded result under `scenarios/finished/`.
+
+Before asking for approval to continue, report the counts for recon items,
+backlog scenarios, rendered prompts, finished results, and findings. If the
+backlog looks like a sample rather than coverage of credible recon evidence,
+recommend another routing pass. If `quality_gates.require_all_backlog_finished`
+is true, state how many backlog scenarios still need results. If validation
+fails, summarize the failure and ask before running the next corrective command.
+
+## Responsibilities
+
+- Confirm the run has source, config, logs, recon output, backlog, finished
+  scenarios, and findings directories.
+- Start recon before expert work.
+- After each phase, summarize artifacts, name the next command, and ask the
+  human whether to proceed.
+- Propose expert batches over the recorded scenario backlog, splitting work into
+  disjoint scenario ranges or module slices.
+- Keep the next checkpoint clear until the backlog is exhausted, the human
+  narrows scope, or the human pauses the run.
+- Promote only recon items with concrete path and signal evidence.
+- Keep scenario ids stable and avoid duplicate expert assignments for the same
+  recon item and class.
+- Treat `needs_context` as a real status, not a failure.
+
+## Quality Gate
+
+A scenario is ready for expert review only when it can be stated as:
+
+`Attacker-controlled input may reach boundary or sink in path, and guard quality
+is missing, uncertain, or class-specific.`

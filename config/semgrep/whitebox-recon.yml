@@ -1,0 +1,140 @@
+rules:
+  - id: whitebox.input.request
+    languages: [generic]
+    message: Request-controlled input or client-controlled state.
+    severity: INFO
+    metadata:
+      inventory_kind: inputs
+      signal: input
+      experts:
+        - authorization-idor
+        - authentication-bypass
+        - mass-assignment-parameter-tampering
+    pattern-regex: '(?i)(request\.|params\[|\$_GET|\$_POST|\$_FILES|optional_param|required_param|php://input|json\.parse|localstorage|location\.hash|http_host|x-forwarded|userid|courseid|groupid|contextid|itemid|instanceid)'
+
+  - id: whitebox.sink.sql
+    languages: [generic]
+    message: SQL construction or execution sink.
+    severity: INFO
+    metadata:
+      inventory_kind: sinks
+      signal: sql
+      experts:
+        - sql-injection
+        - authorization-idor
+        - excessive-data-exposure
+    pattern-regex: '(?i)(query\(|execute\(|get_records_sql|get_record_sql|sql_like|raw\(|select\s+|insert\s+|update\s+|delete\s+)'
+
+  - id: whitebox.sink.command
+    languages: [generic]
+    message: Command execution or process-spawn sink.
+    severity: INFO
+    metadata:
+      inventory_kind: sinks
+      signal: command
+      experts:
+        - command-injection
+    pattern-regex: '(?i)(subprocess|exec\(|system\(|spawn\(|shell_exec|shell\s*=\s*true)'
+
+  - id: whitebox.sink.file
+    languages: [generic]
+    message: File read/write/download path.
+    severity: INFO
+    metadata:
+      inventory_kind: sinks
+      signal: file
+      experts:
+        - path-traversal-file-access
+        - excessive-data-exposure
+    pattern-regex: '(?i)(open\(|readfile|writefile|send_file|download|file_get_contents|content-disposition)'
+
+  - id: whitebox.surface.upload
+    languages: [generic]
+    message: Upload or stored-file handling surface.
+    severity: INFO
+    metadata:
+      inventory_kind: exposures
+      signal: upload
+      experts:
+        - unrestricted-file-upload
+        - path-traversal-file-access
+        - resource-exhaustion-dos
+    pattern-regex: '(?i)(upload|multipart|filename|content-type|attachment|move_uploaded_file|stored-file)'
+
+  - id: whitebox.sink.http-client
+    languages: [generic]
+    message: Outbound HTTP or URL fetch.
+    severity: INFO
+    metadata:
+      inventory_kind: sinks
+      signal: ssrf
+      experts:
+        - ssrf-http-client
+        - excessive-data-exposure
+        - path-traversal-file-access
+    pattern-regex: '(?i)(requests\.|fetch\(|http\.get|httpclient|curl|proxy_pass|webhook|preview|import-url)'
+
+  - id: whitebox.sink.parser-template
+    languages: [generic]
+    message: Parser, template, or dynamic deserialization surface.
+    severity: INFO
+    metadata:
+      inventory_kind: sinks
+      signal: parser
+      experts:
+        - xxe-xml-parser
+        - deserialization-object-injection
+        - ssti-dynamic-template
+        - native-memory-safety
+    pattern-regex: '(?i)(xml|dtd|entity|yaml\.load|deserialize|pickle|unserialize|render-from-string|template|mustache|erb|ffi|unsafe)'
+
+  - id: whitebox.sink.html
+    languages: [generic]
+    message: HTML, template, or DOM output sink.
+    severity: INFO
+    metadata:
+      inventory_kind: sinks
+      signal: xss
+      experts:
+        - xss-template-injection
+        - ssti-dynamic-template
+    pattern-regex: '(?i)(innerhtml|ng-bind-html|html_writer|format_text|format_string|param_raw|param_notags|render\(|template)'
+
+  - id: whitebox.sink.redirect-header
+    languages: [generic]
+    message: Redirect or response-header construction.
+    severity: INFO
+    metadata:
+      inventory_kind: sinks
+      signal: redirect
+      experts:
+        - open-redirect-header-injection
+        - csrf-state-change
+    pattern-regex: '(?i)(redirect\(|header\(|location:|content-disposition|return_to|next=|callback)'
+
+  - id: whitebox.exposure.secret-debug
+    languages: [generic]
+    message: Secret, admin, debug, or example exposure.
+    severity: INFO
+    metadata:
+      inventory_kind: exposures
+      signal: exposure
+      experts:
+        - secrets-exposure
+        - admin-debug-install-exposure
+        - logging-error-disclosure
+    pattern-regex: '(?i)(password|secret|api_key|credential|\.env|admin|example|debug|stack-trace|verbose-error)'
+
+  - id: whitebox.control.identity-state
+    languages: [generic]
+    message: Identity, session, state transition, or federated auth surface.
+    severity: INFO
+    metadata:
+      inventory_kind: routes
+      signal: state
+      experts:
+        - authentication-bypass
+        - csrf-state-change
+        - oauth-saml-identity-federation
+        - business-logic-workflow
+    pattern-regex: '(?i)(oauth|oidc|saml|sso|mfa|csrf|state|approve|reset|session|signed-cookie|jwt|account-linking)'
