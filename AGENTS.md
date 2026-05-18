@@ -12,15 +12,18 @@ review of the target repository.
 For a new target, use phase checkpoints:
 
 1. Run `python3 scripts/commands/init-run.py <target> <git-url> [--run-id <run-id>] [--branch <branch>]`.
-2. Summarize the created run, source commit, and next command; ask the human
-   whether to proceed.
-3. Run `python3 scripts/commands/run-recon.py <target> <run-id>` only after
-   approval.
+2. Summarize the created run and source commit, then ask the human what
+   security experts to use before recon. Show every configured expert and the
+   option `all agents`.
+3. Run `python3 scripts/commands/run-recon.py <target> <run-id> --all-agents`
+   only after approval, or run it with one or more `--expert <expert-id>`
+   options if the human selected a subset.
 4. Summarize recon counts and artifacts; ask whether to proceed. If the human
    wants deeper source-pattern coverage, rerun recon with `--semgrep` before
    scenario routing.
 5. Run `python3 scripts/commands/create-scenarios.py <target> <run-id>` only
-   after approval.
+   after approval. The scenario-router must use the expert scope recorded
+   before recon; do not create scenarios for unselected experts.
 6. Summarize the router prompt and ask whether the scenario-router should answer
    it.
 7. Record approved router output with `python3 scripts/commands/record-scenario-backlog.py <target> <run-id> router-result.json`.

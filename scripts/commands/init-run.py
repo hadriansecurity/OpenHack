@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 from whitebox_pentesting_agent.run import init_run
+from whitebox_pentesting_agent.expert_scope import expert_options_text
 from whitebox_pentesting_agent.summary import format_checkpoint
 
 
@@ -22,8 +23,14 @@ def main():
         "Initialize Run",
         f"Created run {args.target}/{run_id} from a fresh source checkout.",
         artifacts=[path, path / "run-config.yaml", path / "plan.md"],
-        review="Confirm scope, branch, commit, and whether recon should start.",
-        next_command=f"python3 scripts/commands/run-recon.py {args.target} {run_id}",
+        review=(
+            "Confirm scope, branch, commit, and choose security experts before "
+            "recon. Options:\n" + expert_options_text()
+        ),
+        next_command=(
+            f"python3 scripts/commands/run-recon.py {args.target} {run_id} "
+            "--all-agents"
+        ),
     ))
 
 

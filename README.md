@@ -55,11 +55,16 @@ before continuing.
 # Create a run from a fresh git checkout
 whitebox init-run demo https://github.com/example/app.git --run-id demo-001
 
-# Reconnaissance: discover routes, sinks, inputs, exposures
-whitebox run-recon demo demo-001
+# Choose expert scope, then run reconnaissance
+whitebox run-recon demo demo-001 --all-agents
+
+# Or scope the run to selected experts
+whitebox run-recon demo demo-001 \
+  --expert sql-injection \
+  --expert xss-template-injection
 
 # Optional: enrich recon with bundled Semgrep rules
-whitebox run-recon demo demo-001 --semgrep
+whitebox run-recon demo demo-001 --all-agents --semgrep
 
 # Build the scenario-router prompt from recon output
 whitebox create-scenarios demo demo-001
@@ -99,11 +104,12 @@ and the human approves each phase before the next command runs.
 
 ```mermaid
 flowchart TB
-  classDef human fill:#111111,stroke:#B00020,color:#FFFFFF,stroke-width:2px;
+  classDef human fill:#FF003D,stroke:#111111,color:#FFFFFF,stroke-width:2px;
   classDef command fill:#FFFFFF,stroke:#111111,color:#111111,stroke-width:2px;
-  classDef artifact fill:#E8E6E3,stroke:#5F5652,color:#111111,stroke-width:1.5px;
-  classDef agent fill:#111111,stroke:#B00020,color:#FFFFFF,stroke-width:2px;
-  classDef finding fill:#111111,stroke:#B00020,color:#FFFFFF,stroke-width:2px;
+  classDef artifact fill:#F3F0EC,stroke:#5F5652,color:#111111,stroke-width:1.5px;
+  classDef scope fill:#FFE8EF,stroke:#FF003D,color:#111111,stroke-width:2px;
+  classDef agent fill:#111111,stroke:#FF003D,color:#FFFFFF,stroke-width:2px;
+  classDef finding fill:#FF003D,stroke:#111111,color:#FFFFFF,stroke-width:2px;
   classDef checkpoint fill:#FFFFFF,stroke:#5F5652,color:#111111,stroke-width:2px,stroke-dasharray: 5 3;
 
   human["Human operator<br/>reviews checkpoint<br/>and approves next phase"]:::human
@@ -111,9 +117,12 @@ flowchart TB
 
   init["1. init-run.py<br/>fresh clone + run config"]:::command
   source["sourcecode/<br/>target checkout"]:::artifact
-  cp1{{Checkpoint<br/>confirm scope, branch,<br/>and commit}}:::checkpoint
+  cp1{{Checkpoint<br/>confirm branch, commit,<br/>and expert scope}}:::checkpoint
 
-  recon["2. run-recon.py<br/>source reconnaissance"]:::command
+  expertChoice["Expert scope<br/>all agents or selected<br/>security experts"]:::scope
+  runConfig["run-config.yaml<br/>expert_scope"]:::artifact
+
+  recon["2. run-recon.py<br/>scoped reconnaissance"]:::command
   reconFiles["recon-output/<br/>routes, inputs, sinks,<br/>exposures, coverage"]:::artifact
   cp2{{Checkpoint<br/>review recon counts<br/>and routing hints}}:::checkpoint
 
@@ -135,7 +144,7 @@ flowchart TB
   validate["7. validate-run.py<br/>quality gate"]:::command
 
   human --> init --> source --> cp1
-  cp1 --> recon --> reconFiles --> cp2
+  cp1 --> expertChoice --> runConfig --> recon --> reconFiles --> cp2
   cp2 --> routePrompt --> routerAgent --> cp3
   cp3 --> recordBacklog --> backlog --> cp4
   cp4 --> render --> experts --> cp5
@@ -143,6 +152,7 @@ flowchart TB
   validate --> human
 
   init -. writes .-> logs
+  expertChoice -. recorded in .-> runConfig
   recon -. writes .-> logs
   routePrompt -. writes .-> logs
   recordBacklog -. writes .-> logs
@@ -161,6 +171,11 @@ flowchart TB
 | **Scenario** | One recon item + one expert + one proof question. The same file may appear in multiple scenarios when multiple root-cause experts are relevant. |
 | **Finding** | A verified vulnerability. One scenario can produce multiple findings when separate parameters, sinks, or trust boundaries are independently vulnerable. |
 
+**Expert scope** is chosen before recon. Use `all agents` for broad coverage, or
+select one or more expert IDs to focus routing. The chosen scope is written to
+`run-config.yaml`, and later coverage, router prompts, and backlog recording are
+constrained to that same set of experts.
+
 **Findings are accepted only when recorded through `scenarios/finished/` and
 `findings/`.** Do not start a pentest with a broad LLM source sweep — the contract
 is command-first and artifact-first.
@@ -178,7 +193,8 @@ Run commands from the repository root (or set `WHITEBOX_AGENT_ROOT`). The
 | Command | Purpose |
 |---|---|
 | `whitebox init-run <target> <git-url> [--run-id <id>] [--branch <branch>]` | Clone the target into a fresh run workspace. |
-| `whitebox run-recon <target> <run-id> [--semgrep]` | Source reconnaissance; `--semgrep` adds bundled rule hints. |
+| `whitebox run-recon <target> <run-id> --all-agents [--semgrep]` | Source reconnaissance with every configured security expert; `--semgrep` adds bundled rule hints. |
+| `whitebox run-recon <target> <run-id> --expert <id> [--expert <id> ...] [--semgrep]` | Source reconnaissance scoped to selected expert IDs. |
 | `whitebox create-scenarios <target> <run-id>` | Build the scenario-router agent prompt from recon output. |
 | `whitebox record-scenario-backlog <target> <run-id> <router-result.json>` | Materialize the router's selected backlog into `scenarios/backlog/`. |
 | `whitebox render-scenario-prompt <target> <run-id> <S###>` | Render a scenario prompt for an expert agent. |
@@ -194,7 +210,9 @@ Run commands from the repository root (or set `WHITEBOX_AGENT_ROOT`). The
 `inputs.jsonl`, `sinks.jsonl`, `exposures.jsonl`, and `coverage-gaps.json`. With
 `--semgrep`, raw `semgrep-results.json` is also written and normalized into the
 same recon items and routing requirements. **Semgrep hits are hints, not verified
-vulnerabilities.**
+vulnerabilities.** Recon also records expert scope in `run-config.yaml`; rerun
+with `--all-agents` or repeated `--expert` options to change scope before
+scenario routing.
 
 ### What the router does
 
@@ -204,6 +222,8 @@ scenario-router agent answers with JSON containing top-level `scenarios` and
 `coverage_decisions` arrays. `record-scenario-backlog` validates that every
 recon path and path/expert requirement is either represented by a scenario or
 explicitly explained by a coverage decision before materializing the backlog.
+The prompt and validator only use experts selected before recon, so a focused
+run does not create backlog work for unselected experts.
 
 ---
 
@@ -220,7 +240,7 @@ runs/<target>/<run-id>/
     finished/           Recorded scenario results.
   findings/             Verified findings for this run.
   logs/                 Structured event log.
-  run-config.yaml       Target URL, commit, branch, workflow metadata.
+  run-config.yaml       Target URL, commit, branch, expert scope, workflow metadata.
   run-state.jsonl       Run lifecycle events.
   trace.jsonl           Structured agent and command trace.
 ```
