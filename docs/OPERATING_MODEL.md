@@ -81,3 +81,17 @@ plus the usual scenario result fields. The recorder fans that bundle into
 splitting after parallel expert work. Final `findings/` are written only by the
 finding-triage recorder after an independent triage agent accepts or downgrades
 a candidate.
+
+## Finding Triage
+
+Finding triage is a durable gate, not editorial cleanup. Each
+`finding-candidates/S###-F###.json` file gets its own rendered prompt under
+`finding-triage/prompts/` and its own triage-agent answer under
+`finding-triage/decisions/`.
+
+The triage agent checks whether the candidate is reportable, whether it
+duplicates or should merge with an existing finding, whether the evidence proves
+the claimed boundary crossing, and whether severity is justified by attacker
+role, preconditions, exploitability, blast radius, confidence, and deployment
+assumptions. Only `accepted` and `downgraded` decisions materialize final
+`findings/*.md` reports.

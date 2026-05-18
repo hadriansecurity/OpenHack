@@ -18,10 +18,8 @@ The durable flow is
   backlog exists, create and record scenarios before expert review.
 - Each phase ends with a short artifact summary, the next command, and an
   explicit request for human approval before continuing.
-- A recon item is a route, request boundary, file, sink, auth boundary, parser,
-  manifest, or other place worth review. Request boundaries include framework,
-  middleware, generated, environment-derived, and vendor-owned endpoints even
-  when no application controller body is present.
+- A recon item is a route, file, sink, auth boundary, parser, manifest, or other
+  place worth review.
 - A scenario is one recon item paired with one expert and one proof question.
 - Multiple scenarios may reference the same recon item or path when multiple
   root-cause experts are relevant. One expert per scenario is an ownership rule,
@@ -103,7 +101,8 @@ Scenario results should include:
 - `surface_class_coverage`: reviewed surfaces and per-class decisions.
 - `same_root_expansion`: sibling source/sink checks.
 - `candidate_queue_entries`: structured follow-up leads.
-- `findings`: verified findings only.
+- `findings`: verified finding candidates only. The field name is kept for
+  compatibility, but final findings are admitted by the finding-triage phase.
 
 Each finding candidate should include:
 

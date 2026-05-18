@@ -22,7 +22,7 @@ to run after the human approves proceeding.
 
 ```bash
 whitebox init-run demo https://github.com/example/app.git
-whitebox run-recon demo <run-id>
+whitebox run-recon demo <run-id> --all-agents
 whitebox create-scenarios demo <run-id>
 whitebox record-scenario-backlog demo <run-id> router-result.json
 whitebox render-scenario-prompt demo <run-id> S001
@@ -46,7 +46,7 @@ explicit `coverage_decision`.
 To enrich recon with bundled Semgrep rules, run:
 
 ```bash
-whitebox run-recon demo <run-id> --semgrep
+whitebox run-recon demo <run-id> --all-agents --semgrep
 ```
 
 Semgrep output is stored as `semgrep-results.json` and normalized into the same
@@ -65,6 +65,10 @@ To record independent finding triage and materialize an accepted final finding:
 whitebox render-finding-triage-prompt demo <run-id> S001-F001
 whitebox record-finding-triage demo <run-id> S001-F001 triage-result.json
 ```
+
+The triage result is a separate agent answer. It should justify
+`final_severity`, `severity_rationale`, `confidence`, dedupe/scope decisions,
+and any evidence gaps before a candidate becomes a final report.
 
 To record a multi-scenario expert bundle:
 

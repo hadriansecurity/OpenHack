@@ -8,7 +8,10 @@ Before opening a pull request:
   review outputs are local data.
 - Keep public command wrappers small. Shared behavior belongs in
   `src/whitebox_pentesting_agent/`.
-- Preserve the durable workflow: `recon item -> scenario -> result -> finding`.
+- Preserve the durable workflow:
+  `recon item -> scenario -> result -> finding candidate -> triage -> finding`.
+  Scenario experts may propose finding candidates, but final findings require
+  recorded finding-triage decisions.
 - Run `python3 scripts/commands/validate-run.py` before submitting changes.
 
 The compatibility scripts under `scripts/commands/` remain supported, but new

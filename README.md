@@ -242,6 +242,18 @@ explicitly explained by a coverage decision before materializing the backlog.
 The prompt and validator only use experts selected before recon, so a focused
 run does not create backlog work for unselected experts.
 
+### What finding triage does
+
+Scenario experts write proposed vulnerabilities into the scenario result's
+`findings` array, but `record-scenario-result` stores them as
+`finding-candidates/S###-F###.json`. A candidate is not a final report.
+
+For each candidate, render a dedicated prompt for the `finding-triage` agent.
+That agent independently checks evidence quality, reportability, duplicate or
+merge scope, confidence, and severity due diligence. `record-finding-triage`
+records the decision under `finding-triage/decisions/`; only `accepted` and
+`downgraded` decisions create Markdown reports under `findings/`.
+
 ---
 
 ## Run Layout
@@ -282,7 +294,7 @@ agents/
   shared/                          Protocol all agents follow.
 scripts/commands/                  Compatibility wrappers for the public commands.
 src/whitebox_pentesting_agent/     Shared implementation and packaged CLI.
-templates/                         Scenario, result, finding, recon-item templates.
+templates/                         Scenario, result, finding, triage, recon-item templates.
 docs/                              Operating model and quickstart notes.
 runs/                              Generated run workspaces (gitignored).
 ```
