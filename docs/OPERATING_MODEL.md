@@ -63,9 +63,10 @@ scenario-router agent, and the final finding must name one primary root-cause
 owner. The current registry is broad enough for general source-guided review,
 while still allowing cross-family handoffs when one bug enables another.
 
-`config/agents.json` uses `routing_signals` to connect recon evidence to
-plausible experts. These signals are intentionally broad enough to find review
-opportunities, but they are not vulnerability signatures and do not prove impact.
+Each expert manifest in `agents/experts/*.md` declares `routing_signals` in
+its YAML frontmatter to connect recon evidence to plausible experts. These
+signals are intentionally broad enough to find review opportunities, but they
+are not vulnerability signatures and do not prove impact.
 
 One primary root-cause owner per scenario does not mean one expert per file. If a
 path credibly touches upload handling, file paths, parser behavior, and resource

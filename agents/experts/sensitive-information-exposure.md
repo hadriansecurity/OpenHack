@@ -3,6 +3,58 @@ id: sensitive-information-exposure
 kind: expert
 phase: scenario
 tags: [cwe-200, exposure, secrets, logs, errors]
+title: "CWE-200 - Exposure of Sensitive Information to an Unauthorized Actor"
+category: exposure
+ownership: root_cause_family
+standard_refs:
+  - CWE-200
+  - CWE-209
+  - CWE-532
+  - CWE-538
+  - CWE-798
+routing_signals:
+  - secret
+  - token
+  - password
+  - api_key
+  - api-key
+  - credential
+  - private-key
+  - pem
+  - env
+  - dotenv
+  - backup
+  - config
+  - key
+  - access-key
+  - aws
+  - gcp
+  - azure
+  - webhook-secret
+  - stack-trace
+  - exception
+  - traceback
+  - verbose-error
+  - error-page
+  - log-viewer
+  - debug-output
+  - logging
+  - logger
+  - panic
+  - warning
+  - source-map
+  - sourcemap
+  - internal-path
+  - pii
+  - email
+  - ssn
+  - address
+  - phone
+  - profile
+  - database-url
+  - crash-report
+  - audit-export
+  - telemetry
 ---
 
 # CWE-200 - Exposure of Sensitive Information to an Unauthorized Actor Expert

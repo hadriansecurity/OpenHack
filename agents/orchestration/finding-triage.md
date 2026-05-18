@@ -2,6 +2,7 @@
 id: finding-triage
 kind: orchestration
 phase: triage
+owns: final finding admission, severity due diligence, deduplication, and report quality
 ---
 
 # Finding Triage
