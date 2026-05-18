@@ -31,18 +31,5 @@ target-version = "py39"
 
 [tool.mypy]
 files = ["src"]
-
-# Modules below are fully type-annotated; require new code in them to stay
-# typed. Other modules remain untyped for now (see PR #5).
-[[tool.mypy.overrides]]
-module = [
-  "whitebox_pentesting_agent.backlog",
-  "whitebox_pentesting_agent.coverage",
-  "whitebox_pentesting_agent.models",
-  "whitebox_pentesting_agent.recon",
-  "whitebox_pentesting_agent.results",
-  "whitebox_pentesting_agent.router_context",
-  "whitebox_pentesting_agent.triage",
-]
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
