@@ -17,6 +17,12 @@ Read the expert manifest, shared protocol, run config, recon item, and source
 file before answering. Stay inside this scenario unless same-root expansion or a
 cross-class handoff is needed.
 
+If this prompt is part of an approved multi-scenario run, still answer this
+scenario as an individual expert review. Do not use a bulk classification,
+sampled sweep, or repeated template as a substitute for reading this prompt and
+the relevant source. If you did not review this scenario, do not emit a finished
+result for it.
+
 Operate as a specialist for the assigned root-cause class, not as a generic
 scanner. Use the expert manifest as a playbook: map the reachable entrypoint,
 trace attacker control to the exact sink or boundary, inspect guards in the

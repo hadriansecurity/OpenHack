@@ -25,7 +25,9 @@ For a new target, use phase checkpoints:
    it.
 7. Record approved router output with `python3 scripts/commands/record-scenario-backlog.py <target> <run-id> router-result.json`.
 8. Summarize backlog size and coverage notes; ask whether to run all recorded
-   scenarios as one approved expert-review batch instead of one by one.
+   scenarios under one approval instead of asking one by one. Batch approval is
+   not batch analysis: every scenario still needs its own rendered prompt,
+   source review, evidence, and result.
 9. Review only recorded `runs/<target>/<run-id>/scenarios/backlog/S*.md` expert
    prompts and record results with `python3 scripts/commands/record-scenario-result.py <target> <run-id> ...`.
 10. Validate with `python3 scripts/commands/validate-run.py <target> <run-id>`.
@@ -44,17 +46,20 @@ is small, record coverage notes that explain why the evidence is genuinely
 small. One scenario has one primary expert, but the same file, path, or recon
 item must be routed to every relevant expert as separate scenarios. Do not let a
 single expert assignment suppress other plausible root-cause classes. Once a
-backlog exists, ask to run all unfinished backlog scenarios as one approved
-batch; process them until every `scenarios/backlog/S*.json` item has a
-corresponding `scenarios/finished/S*.json` result, unless the human explicitly
-pauses or narrows the run.
+backlog exists, ask to run all unfinished backlog scenarios under one approval;
+then iterate over every `scenarios/backlog/S*.json` item individually. Do not
+replace per-scenario expert review with a broad classification, sampling pass,
+or templated rejection. Only write `scenarios/finished/S*.json` after reading
+that scenario prompt and the relevant source. If the full backlog cannot be
+reviewed, stop and report the remaining scenario IDs instead of marking them
+finished.
 
 For an existing run, inspect `run-config.yaml`, `plan.md`, `recon-output/`,
 `scenarios/index.jsonl`, `scenarios/backlog/`, `scenarios/finished/`, and
 `findings/` to determine the next missing phase. Summarize the current state and
 ask before continuing from the first missing durable phase instead of starting
 over. If unfinished backlog scenarios remain, ask to process all of them as one
-batch rather than one scenario at a time.
+approved loop rather than asking for confirmation one scenario at a time.
 
 ## Durable Model
 

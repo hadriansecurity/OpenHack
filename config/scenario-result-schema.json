@@ -15,14 +15,16 @@
     "summary": {"type": "string", "minLength": 1},
     "evidence": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": true,
+        "required": ["path", "note"],
         "properties": {
-          "path": {"type": "string"},
+          "path": {"type": "string", "minLength": 1},
           "line": {"type": ["integer", "string"]},
           "role": {"type": "string"},
-          "note": {"type": "string"}
+          "note": {"type": "string", "minLength": 1}
         }
       }
     },

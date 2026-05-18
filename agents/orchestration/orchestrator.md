@@ -29,8 +29,10 @@ The required first durable actions are phase checkpoints:
 6. Run `scripts/commands/create-scenarios.py` after approval.
 7. Have the scenario-router answer the generated prompt, then record that JSON
    with `scripts/commands/record-scenario-backlog.py`.
-8. Summarize backlog coverage and ask whether to run all recorded scenarios as
-   one approved expert-review batch instead of one by one.
+8. Summarize backlog coverage and ask whether to run all recorded scenarios
+   under one approval instead of one by one. Batch approval is not batch
+   analysis: every scenario still needs its own rendered prompt, source review,
+   evidence, and result.
 9. Record expert results with `scripts/commands/record-scenario-result.py`.
 
 Expert analysis outside a recorded scenario is allowed only to produce router
@@ -72,8 +74,10 @@ fails, summarize the failure and ask before running the next corrective command.
 - Start recon before expert work.
 - After each phase, summarize artifacts, name the next command, and ask the
   human whether to proceed.
-- Prefer one approved batch for all unfinished backlog scenarios; split into
-  ranges or module slices only when the human asks to narrow scope.
+- Prefer one approval for the full unfinished backlog, then process scenarios
+  individually. Do not replace per-scenario expert work with a broad batch
+  classification, sample, or templated result. Split into ranges or module
+  slices only when the human asks to narrow scope.
 - Keep the next checkpoint clear until the backlog is exhausted, the human
   narrows scope, or the human pauses the run.
 - Promote only recon items with concrete path and signal evidence.
