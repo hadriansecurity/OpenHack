@@ -7,7 +7,7 @@
 <p align="center"><em>A lightweight, file-based workspace for source-guided whitebox security review.</em></p>
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 
 `whitebox-pentesting-agent` is a set of agents and tools that mimics how the
 Hadrian research team performs automated vulnerability research. The methodology
@@ -46,6 +46,12 @@ checkpoint, and ask before moving to the next phase.
 ```bash
 python3 -m pip install -e .
 ```
+
+This project is currently distributed as a workspace-first repository. The
+root-level `agents/`, `config/`, `templates/`, and writable `runs/` directories
+are runtime data, so the supported install model is a cloned checkout with an
+editable install. If you invoke `whitebox` from outside the checkout, set
+`WHITEBOX_AGENT_ROOT` to the repository root.
 
 **2. Walk through a run.** Execute one command at a time. Each command prints a
 checkpoint summary and the next command to run — review the output and approve
@@ -224,12 +230,12 @@ Run commands from the repository root (or set `WHITEBOX_AGENT_ROOT`). The
 ### What recon produces
 
 `run-recon` writes `recon-items.jsonl` plus lightweight `routes.jsonl`,
-`inputs.jsonl`, `sinks.jsonl`, `exposures.jsonl`, and `coverage-gaps.json`. With
-`--semgrep`, raw `semgrep-results.json` is also written and normalized into the
-same recon items and routing requirements. **Semgrep hits are hints, not verified
-vulnerabilities.** Recon also records expert scope in `run-config.yaml`; rerun
-with `--all-agents` or repeated `--expert` options to change scope before
-scenario routing.
+`inputs.jsonl`, `sinks.jsonl`, `exposures.jsonl`, `request-boundaries.jsonl`,
+and `coverage-gaps.json`. With `--semgrep`, raw `semgrep-results.json` is also
+written and normalized into the same recon items and routing requirements.
+**Semgrep hits are hints, not verified vulnerabilities.** Recon also records
+expert scope in `run-config.yaml`; rerun with `--all-agents` or repeated
+`--expert` options to change scope before scenario routing.
 
 ### What the router does
 
@@ -293,8 +299,8 @@ agents/
   experts/                         OWASP/MITRE-aligned root-cause family experts.
   shared/                          Protocol all agents follow.
 scripts/commands/                  Compatibility wrappers for the public commands.
-src/whitebox_pentesting_agent/     Shared implementation and packaged CLI.
-templates/                         Scenario, result, finding, triage, recon-item templates.
+src/whitebox_pentesting_agent/     Shared implementation and editable-install CLI.
+templates/                         Scenario, result, finding, and triage templates.
 docs/                              Operating model and quickstart notes.
 runs/                              Generated run workspaces (gitignored).
 ```

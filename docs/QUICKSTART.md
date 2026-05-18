@@ -10,11 +10,16 @@ Initiate a whitebox pentest on https://github.com/example/app.git
 The harness should follow `AGENTS.md`: initialize a run, summarize each
 checkpoint, and ask before moving to the next phase.
 
-From the repository root, install the packaged CLI:
+From the repository root, install the CLI in editable mode:
 
 ```bash
 python3 -m pip install -e .
 ```
+
+This repository is the runtime workspace. The `agents/`, `config/`,
+`templates/`, and `runs/` directories are part of normal operation, so use a
+cloned checkout rather than a standalone wheel install. If you invoke the CLI
+from another directory, set `WHITEBOX_AGENT_ROOT` to this repository root.
 
 Do this sequence before any expert/LLM vulnerability review. Run one command at
 a time. Each command prints what changed, what to review, and the next command
@@ -38,10 +43,10 @@ from recorded `scenarios/backlog/S*.md` prompts. Use `summarize-run` when
 resuming a run to see the current counts and next checkpoint.
 
 Recon writes `recon-items.jsonl` plus lightweight `routes.jsonl`,
-`inputs.jsonl`, `sinks.jsonl`, `exposures.jsonl`, and `coverage-gaps.json`.
-The scenario-router prompt embeds these as routing hints. Router output must
-cover every `routing_requirements` path/expert pair with a scenario or an
-explicit `coverage_decision`.
+`inputs.jsonl`, `sinks.jsonl`, `exposures.jsonl`, `request-boundaries.jsonl`,
+and `coverage-gaps.json`. The scenario-router prompt embeds these as routing
+hints. Router output must cover every `routing_requirements` path/expert pair
+with a scenario or an explicit `coverage_decision`.
 
 To enrich recon with bundled Semgrep rules, run:
 
