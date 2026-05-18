@@ -26,6 +26,9 @@ whitebox run-recon demo <run-id>
 whitebox create-scenarios demo <run-id>
 whitebox record-scenario-backlog demo <run-id> router-result.json
 whitebox render-scenario-prompt demo <run-id> S001
+whitebox record-scenario-result demo <run-id> S001 result.json
+whitebox render-finding-triage-prompt demo <run-id> S001-F001
+whitebox record-finding-triage demo <run-id> S001-F001 triage-result.json
 whitebox validate-run demo <run-id>
 whitebox summarize-run demo <run-id>
 ```
@@ -50,10 +53,17 @@ Semgrep output is stored as `semgrep-results.json` and normalized into the same
 recon items and routing requirements. Treat these matches as routing evidence,
 not verified vulnerabilities.
 
-To record a verified scenario result:
+To record a verified scenario result as a finding candidate:
 
 ```bash
 whitebox record-scenario-result demo <run-id> S001 result.json
+```
+
+To record independent finding triage and materialize an accepted final finding:
+
+```bash
+whitebox render-finding-triage-prompt demo <run-id> S001-F001
+whitebox record-finding-triage demo <run-id> S001-F001 triage-result.json
 ```
 
 To record a multi-scenario expert bundle:
@@ -63,4 +73,5 @@ whitebox record-scenario-result demo <run-id> expert-results.json
 ```
 
 The bundle must contain a top-level `results` array. Each item needs
-`scenario_id` and the normal scenario result fields.
+`scenario_id` and the normal scenario result fields. Bundles create finding
+candidates, not final findings; triage each candidate separately.

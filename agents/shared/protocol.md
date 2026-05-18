@@ -10,32 +10,40 @@ primary expert ownership labels.
 
 ## Working Model
 
-The durable flow is `recon item -> scenario -> result -> finding`.
+The durable flow is
+`recon item -> scenario -> result -> finding candidate -> triage -> finding`.
 
 - New pentest work starts with the commands and run folder, not an ad hoc LLM
   sweep. If no run exists, initialize one; if recon has not run, run recon; if no
   backlog exists, create and record scenarios before expert review.
 - Each phase ends with a short artifact summary, the next command, and an
   explicit request for human approval before continuing.
-- A recon item is a route, file, sink, auth boundary, parser, manifest, or other
-  place worth review.
+- A recon item is a route, request boundary, file, sink, auth boundary, parser,
+  manifest, or other place worth review. Request boundaries include framework,
+  middleware, generated, environment-derived, and vendor-owned endpoints even
+  when no application controller body is present.
 - A scenario is one recon item paired with one expert and one proof question.
 - Multiple scenarios may reference the same recon item or path when multiple
   root-cause experts are relevant. One expert per scenario is an ownership rule,
   not a cap on expert coverage.
-- A finding is a verified vulnerability. One scenario may create many findings.
+- A finding candidate is a scenario expert's proposed reportable vulnerability.
+- A finding is a triage-accepted vulnerability. One scenario may create many
+  finding candidates, and triage may accept, downgrade, merge, reject, or request
+  more context for each one.
 
 ## Phase Completion Gates
 
 Agents should finish the approved phase by writing durable artifacts, not just a
 prompt or handoff file. Recon is ready for routing when recon inventories exist.
 Routing is ready for expert work only when the scenario backlog is recorded.
-Expert review is ready for triage only when scenario results are recorded. After
-each phase, summarize the artifacts and ask before moving on. Do not present
-recon, prompt generation, or a small sample of expert scenarios as complete
-coverage. Once a backlog exists, process approved scenario checkpoints until
-every recorded scenario is finished unless the human explicitly pauses or
-narrows the run.
+Expert review is ready for finding triage only when scenario results and
+finding candidates are recorded. After each phase, summarize the artifacts and
+ask before moving on. Do not present recon, prompt generation, a small sample of
+expert scenarios, or untriaged candidates as complete coverage. Once a backlog
+exists, process approved scenario checkpoints until every recorded scenario is
+finished unless the human explicitly pauses or narrows the run. Once finding
+candidates exist, process approved triage checkpoints until every candidate has
+a recorded triage decision.
 
 Before reporting a run as unblocked or complete, validate the run. If the run
 config defines a scenario minimum, the recorded backlog must meet it unless a
@@ -97,7 +105,7 @@ Scenario results should include:
 - `candidate_queue_entries`: structured follow-up leads.
 - `findings`: verified findings only.
 
-Each verified finding should include:
+Each finding candidate should include:
 
 - `title`: standardized title in the form `<severity> - <type of vuln> - <location>`.
 - `severity`: `critical`, `high`, `medium`, `low`, or `informational`.
@@ -114,6 +122,11 @@ Each verified finding should include:
 - `attacker_use`: how an attacker could practically use the issue.
 - `recommended_fix`: specific remediation guidance.
 - `validation_notes`: safe reproduction and fix-verification notes.
+
+The finding-triage agent owns final admission and severity due diligence. It
+must independently check reportability, duplicate/scope boundaries, evidence
+quality, confidence, and severity before a candidate is materialized under
+`findings/`.
 
 ## Rejection Rules
 

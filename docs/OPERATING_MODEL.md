@@ -5,7 +5,8 @@ source-guided security review.
 
 Every run is stored under `runs/<target>/<run-id>/` and starts with a fresh git
 clone into `sourcecode/`. Agents operate through files: recon output, scenario
-prompts, scenario results, findings, and logs.
+prompts, scenario results, finding candidates, triage decisions, findings, and
+logs.
 
 Run initiation is command-first and checkpointed. A new pentest must begin by
 creating or identifying a run folder, running recon, creating the
@@ -29,8 +30,13 @@ The durable model is:
    deployment aliases too early. Recon also writes `routing_requirements`, a
    path/expert coverage contract that the backlog recorder enforces.
 3. Scenario: one recon item paired with one expert and a proof question.
-4. Finding: a verified vulnerability. One scenario may create many findings,
-   and broad finding width is preferred over overly aggressive grouping.
+4. Finding candidate: a scenario expert's proposed verified vulnerability,
+   pending independent triage.
+5. Finding triage: a one-candidate review that checks reportability,
+   deduplication, confidence, scope, and severity.
+6. Finding: a triage-accepted vulnerability. One scenario may create many
+   candidates, and broad candidate width is preferred over overly aggressive
+   grouping.
 
 Logs are audit artifacts, not private reasoning transcripts. They record what
 was done, what evidence was used, what decision was made, and what should happen
@@ -68,8 +74,10 @@ expert. If it intentionally skips a path or path/expert pair, it must write a
 structured `coverage_decision`; otherwise `record-scenario-backlog.py` rejects
 the router output.
 
-Expert result recording supports both single-scenario files and bundles. A
+Expert result recording supports both single-scenario files and small bundles. A
 bundle uses a top-level `results` array where each entry includes `scenario_id`
 plus the usual scenario result fields. The recorder fans that bundle into
-`scenarios/finished/` and `findings/`, which avoids manual JSON splitting after
-parallel expert work.
+`scenarios/finished/` and `finding-candidates/`, which avoids manual JSON
+splitting after parallel expert work. Final `findings/` are written only by the
+finding-triage recorder after an independent triage agent accepts or downgrades
+a candidate.

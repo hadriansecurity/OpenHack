@@ -2,7 +2,7 @@
   "orchestration": [
     {"id": "orchestrator", "phase": "setup", "owns": "run lifecycle and quality gates"},
     {"id": "scenario-router", "phase": "routing", "owns": "recon item to expert fan-out"},
-    {"id": "finding-triage", "phase": "triage", "owns": "verified finding separation and cleanup"}
+    {"id": "finding-triage", "phase": "triage", "owns": "final finding admission, severity due diligence, deduplication, and report quality"}
   ],
   "reconnaissance": [
     {"id": "source-recon", "phase": "recon", "emits": ["recon_item"], "signals": ["route", "sink", "manifest", "auth-boundary", "secret-surface", "file"]}

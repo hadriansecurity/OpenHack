@@ -13,15 +13,15 @@
 Hadrian research team performs automated vulnerability research. The methodology
 has been adjusted so it can run inside a common model harness — Claude Code,
 Codex, Cursor, or a custom runner — while keeping durable state in plain files:
-cloned source, recon items, scenario prompts, scenario results, findings, and
-logs. The harness provides model execution, terminal access, repository access,
-and human-in-the-loop approval; this tool provides the durable workflow and
-review artifacts.
+cloned source, recon items, scenario prompts, scenario results, finding
+candidates, triage decisions, findings, and logs. The harness provides model
+execution, terminal access, repository access, and human-in-the-loop approval;
+this tool provides the durable workflow and review artifacts.
 
 **The core idea:** checkpointed, scenario-first review. Recon discovers surfaces,
 a router agent turns them into scoped scenarios, expert agents prove or reject
-each scenario, and verified results become findings. The human approves every
-phase transition.
+each scenario, and an independent triage agent decides which verified candidates
+become final findings. The human approves every phase transition.
 
 ---
 
@@ -75,8 +75,12 @@ whitebox record-scenario-backlog demo demo-001 router-result.json
 # Render a scenario prompt for an expert agent
 whitebox render-scenario-prompt demo demo-001 S001
 
-# Record an expert's verified result (materializes findings/)
+# Record an expert's verified result (materializes finding-candidates/)
 whitebox record-scenario-result demo demo-001 S001 result.json
+
+# Render and record independent triage before final findings are created
+whitebox render-finding-triage-prompt demo demo-001 S001-F001
+whitebox record-finding-triage demo demo-001 S001-F001 triage-result.json
 
 # Resume or hand off: prints current counts + next checkpoint
 whitebox summarize-run demo demo-001
@@ -96,7 +100,7 @@ detail.
 The durable chain is always:
 
 ```text
-recon item  →  scenario  →  result  →  finding
+recon item  →  scenario  →  result  →  finding candidate  →  triage  →  finding
 ```
 
 Everything is deliberately small: commands create files, agents read those files,
@@ -138,17 +142,22 @@ flowchart TB
   experts["expert agents<br/>prove, reject,<br/>or request context"]:::agent
   cp5{{Checkpoint<br/>review expert answer<br/>before recording}}:::checkpoint
 
-  result["6. record-scenario-result.py<br/>result + findings"]:::command
+  result["6. record-scenario-result.py<br/>result + candidates"]:::command
   finished["scenarios/finished/<br/>durable results"]:::artifact
+  candidates["finding-candidates/<br/>proposed findings"]:::artifact
+  triagePrompt["7. render-finding-triage-prompt.py<br/>triage prompt"]:::command
+  triageAgent["finding-triage<br/>severity + scope due diligence"]:::agent
+  triageRecord["8. record-finding-triage.py<br/>triage decision"]:::command
+  triageDecisions["finding-triage/decisions/<br/>admission records"]:::artifact
   findings["findings/<br/>verified reports"]:::finding
-  validate["7. validate-run.py<br/>quality gate"]:::command
+  validate["9. validate-run.py<br/>quality gate"]:::command
 
   human --> init --> source --> cp1
   cp1 --> expertChoice --> runConfig --> recon --> reconFiles --> cp2
   cp2 --> routePrompt --> routerAgent --> cp3
   cp3 --> recordBacklog --> backlog --> cp4
   cp4 --> render --> experts --> cp5
-  cp5 --> result --> finished --> findings --> validate
+  cp5 --> result --> finished --> candidates --> triagePrompt --> triageAgent --> triageRecord --> triageDecisions --> findings --> validate
   validate --> human
 
   init -. writes .-> logs
@@ -157,7 +166,10 @@ flowchart TB
   routePrompt -. writes .-> logs
   recordBacklog -. writes .-> logs
   result -. writes .-> logs
+  triagePrompt -. writes .-> logs
+  triageRecord -. writes .-> logs
   validate -. reads .-> finished
+  validate -. reads .-> triageDecisions
   validate -. reads .-> findings
 ```
 
@@ -169,16 +181,18 @@ flowchart TB
 |---|---|
 | **Recon item** | A discovered place worth review — a route, sink, auth boundary, manifest, upload handler, or parser entrypoint. |
 | **Scenario** | One recon item + one expert + one proof question. The same file may appear in multiple scenarios when multiple root-cause experts are relevant. |
-| **Finding** | A verified vulnerability. One scenario can produce multiple findings when separate parameters, sinks, or trust boundaries are independently vulnerable. |
+| **Finding candidate** | A scenario expert's proposed verified vulnerability, pending independent triage. |
+| **Finding** | A triage-accepted vulnerability. One scenario can produce multiple candidates when separate parameters, sinks, or trust boundaries are independently vulnerable. |
 
 **Expert scope** is chosen before recon. Use `all agents` for broad coverage, or
 select one or more expert IDs to focus routing. The chosen scope is written to
 `run-config.yaml`, and later coverage, router prompts, and backlog recording are
 constrained to that same set of experts.
 
-**Findings are accepted only when recorded through `scenarios/finished/` and
-`findings/`.** Do not start a pentest with a broad LLM source sweep — the contract
-is command-first and artifact-first.
+**Findings are accepted only when recorded through `scenarios/finished/`,
+`finding-candidates/`, `finding-triage/decisions/`, and `findings/`.** Do not
+start a pentest with a broad LLM source sweep — the contract is command-first
+and artifact-first.
 
 Logs are audit artifacts, not private reasoning transcripts: what was done, what
 evidence was used, what decision was made, status, and handoffs.
@@ -199,8 +213,10 @@ Run commands from the repository root (or set `WHITEBOX_AGENT_ROOT`). The
 | `whitebox create-scenarios <target> <run-id>` | Build the scenario-router agent prompt from recon output. |
 | `whitebox record-scenario-backlog <target> <run-id> <router-result.json>` | Materialize the router's selected backlog into `scenarios/backlog/`. |
 | `whitebox render-scenario-prompt <target> <run-id> <S###>` | Render a scenario prompt for an expert agent. |
-| `whitebox record-scenario-result <target> <run-id> <S###> <result.json>` | Record a verified result; materializes any findings. |
+| `whitebox record-scenario-result <target> <run-id> <S###> <result.json>` | Record an expert result and materialize any finding candidates. |
 | `whitebox record-scenario-result <target> <run-id> <bundle.json>` | Record a multi-scenario bundle (top-level `results` array). |
+| `whitebox render-finding-triage-prompt <target> <run-id> <S###-F###>` | Render a prompt for the independent finding-triage agent. |
+| `whitebox record-finding-triage <target> <run-id> <S###-F###> <triage-result.json>` | Record reportability, dedupe, confidence, and severity due diligence; accepted/downgraded decisions materialize final findings. |
 | `whitebox summarize-run <target> <run-id>` | Print current counts and the next checkpoint command. |
 | `whitebox log-event <target> <run-id> <actor> <status> <summary>` | Append an operational log event. |
 | `whitebox validate-run [<target> <run-id>]` | Validate the whole repo or a specific run. |
@@ -239,7 +255,11 @@ runs/<target>/<run-id>/
   scenarios/
     backlog/            Scenario JSON and rendered expert prompts.
     finished/           Recorded scenario results.
-  findings/             Verified findings for this run.
+  finding-candidates/   Proposed findings emitted by scenario experts.
+  finding-triage/
+    prompts/            Rendered one-candidate triage prompts.
+    decisions/          Recorded triage decisions.
+  findings/             Triage-accepted findings for this run.
   logs/                 Structured event log.
   run-config.yaml       Target URL, commit, branch, expert scope, workflow metadata.
   run-state.jsonl       Run lifecycle events.

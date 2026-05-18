@@ -33,7 +33,18 @@ For a new target, use phase checkpoints:
    and result.
 9. Review only recorded `runs/<target>/<run-id>/scenarios/backlog/S*.md` expert
    prompts and record results with `python3 scripts/commands/record-scenario-result.py <target> <run-id> ...`.
-10. Validate with `python3 scripts/commands/validate-run.py <target> <run-id>`.
+   This records finished scenario results and `finding-candidates/`; it does not
+   create final `findings/`.
+10. Summarize finding-candidate count and ask once to run the entire unfinished
+    finding triage backlog. Every candidate must use its own rendered
+    `runs/<target>/<run-id>/finding-triage/prompts/S###-F###.md` prompt and its
+    own finding-triage subagent. Render prompts with
+    `python3 scripts/commands/render-finding-triage-prompt.py <target> <run-id> <candidate-id>`.
+11. Record each finding-triage agent answer with
+    `python3 scripts/commands/record-finding-triage.py <target> <run-id> <candidate-id> triage-result.json`.
+    Only `accepted` and `downgraded` triage decisions may materialize final
+    `findings/`.
+12. Validate with `python3 scripts/commands/validate-run.py <target> <run-id>`.
 
 Do not begin vulnerability analysis from recon alone. Recon is only a scouting
 phase; summarize it and ask before scenario routing. Do not treat the
@@ -58,6 +69,12 @@ write `scenarios/finished/S*.json` after reading that scenario prompt and the
 relevant source. If the full backlog cannot be reviewed, stop and report the
 remaining scenario IDs instead of marking them finished.
 
+After scenario review, finding triage is a second continuous loop. Ask once to
+run all unfinished `finding-candidates/S###-F###.json` candidates through the
+`finding-triage` agent, then process each candidate individually. Do not mark a
+candidate triaged from the scenario result alone, and do not create final
+`findings/*.md` without a recorded triage decision.
+
 Every scenario must be run by its own subagent. The rendered
 `runs/<target>/<run-id>/scenarios/backlog/S*.md` file is the exact prompt for
 that scenario's subagent. The orchestrator may schedule subagents, collect their
@@ -66,6 +83,13 @@ scenarios itself, synthesize results from a template, or mark scenarios finished
 without a returned per-scenario subagent review. A bundled result file may only
 contain a small set of already-returned subagent answers; it is never a shortcut
 for running scenarios.
+
+Every finding candidate must also be run by its own independent finding-triage
+subagent. The rendered
+`runs/<target>/<run-id>/finding-triage/prompts/S###-F###.md` file is the exact
+prompt for that triage subagent. The triage agent must perform due diligence on
+reportability, duplicate/scope boundaries, confidence, and severity; the
+scenario expert's severity is evidence, not the final rating.
 
 For efficiency, the orchestrator may group unfinished scenarios by expert and use
 `python3 scripts/commands/next-expert-queue.py <target> <run-id> --expert <expert> --limit <n>`
@@ -76,23 +100,25 @@ more than one scenario. Each result must include `review_mode:
 reviewed source files, and evidence snippets that match cited source lines.
 
 For an existing run, inspect `run-config.yaml`, `plan.md`, `recon-output/`,
-`scenarios/index.jsonl`, `scenarios/backlog/`, `scenarios/finished/`, and
-`findings/` to determine the next missing phase. Summarize the current state and
-ask before continuing from the first missing durable phase instead of starting
-over. If unfinished backlog scenarios remain, ask to process all of them as one
-approved continuous loop rather than asking for confirmation one scenario or
-range at a time.
+`scenarios/index.jsonl`, `scenarios/backlog/`, `scenarios/finished/`,
+`finding-candidates/`, `finding-triage/`, and `findings/` to determine the next
+missing phase. Summarize the current state and ask before continuing from the
+first missing durable phase instead of starting over. If unfinished backlog
+scenarios remain, ask to process all of them as one approved continuous loop
+rather than asking for confirmation one scenario or range at a time. If
+unfinished finding candidates remain, ask once to process all of them as one
+approved continuous triage loop.
 
 ## Durable Model
 
 The required flow is:
 
-`recon item -> scenario -> result -> finding`
+`recon item -> scenario -> result -> finding candidate -> triage -> finding`
 
-Verified findings must be recorded through `scenarios/finished/` and
-`findings/`. Expert analysis outside a recorded scenario may create routing
-input, candidate notes, or `needs_context`, but it should not create final
-findings.
+Verified findings must be recorded through `scenarios/finished/`,
+`finding-candidates/`, `finding-triage/decisions/`, and `findings/`. Expert
+analysis outside a recorded scenario may create routing input, candidate notes,
+or `needs_context`, but it should not create final findings.
 
 ## Generated Run Artifacts
 

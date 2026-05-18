@@ -30,9 +30,9 @@ def main():
     step = next_step(args.target, args.run_id)
     print(format_checkpoint(
         "Record Scenario Result",
-        f"Recorded scenario output and wrote {len(written)} finding files.",
+        f"Recorded scenario output and wrote {len(written)} finding candidates.",
         artifacts=artifacts,
-        review="Check the result status and any generated finding text before continuing.",
+        review="Check the result status and any generated finding candidates before triage.",
         next_command=step["command"],
     ))
 

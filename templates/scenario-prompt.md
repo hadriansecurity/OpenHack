@@ -55,20 +55,25 @@ Write JSON with:
 - `surface_class_coverage`
 - `same_root_expansion`
 - `candidate_queue_entries`
-- `findings`
+- `findings` (verified finding candidates for later independent triage)
 
 Every `evidence` item must cite a reviewed source file with `path`, `line`,
 `snippet`, and `note`. The `snippet` must be copied from the cited source line;
 the recorder and validator reject results whose snippets do not match the
 source checkout.
 
-Prefer width: one verified scenario may emit multiple findings when distinct
+Prefer width: one verified scenario may emit multiple finding candidates when distinct
 parameters, endpoints, sinks, roles, or deployment paths are independently
 vulnerable. Only put verified vulnerabilities in `findings`. Use
 `candidate_queue_entries` for promising but unproven leads or work that belongs
 to another expert.
 
-For each verified finding, include enough context for both engineering and
+The scenario expert does not create final reports. `record-scenario-result`
+stores these entries under `finding-candidates/`; the `finding-triage` agent
+later decides whether each candidate is accepted, downgraded, duplicated,
+rejected, or needs more context.
+
+For each verified finding candidate, include enough context for both engineering and
 non-technical review:
 
 - `title`: `<severity> - <type of vuln> - <location>`

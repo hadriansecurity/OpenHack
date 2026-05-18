@@ -1,6 +1,8 @@
 # <title>
 
 - Severity: <severity>
+- Severity rationale: <severity_rationale>
+- Confidence: <confidence>
 - Scenario: <scenario_id>
 - Target path: <target_path>
 - Attacker role: <attacker_role>

@@ -33,11 +33,17 @@ The required first durable actions are phase checkpoints:
    unfinished scenario backlog. Batch approval is not batch analysis: every
    scenario still needs its own rendered prompt, source review, evidence, and
    result.
-9. Record expert results with `scripts/commands/record-scenario-result.py`.
+9. Record expert results and finding candidates with
+   `scripts/commands/record-scenario-result.py`.
+10. Summarize candidate count and ask once to run the entire unfinished finding
+    triage backlog.
+11. Render one finding-triage prompt per candidate and record one triage result
+    per candidate with `scripts/commands/record-finding-triage.py`.
 
 Expert analysis outside a recorded scenario is allowed only to produce router
 input, candidate queue notes, or a `needs_context` explanation. Verified
-findings must flow through `scenarios/finished/` and `findings/`.
+findings must flow through `scenarios/finished/`, `finding-candidates/`,
+`finding-triage/decisions/`, and `findings/`.
 
 ## Checkpointed Run Contract
 
@@ -45,8 +51,8 @@ A pentest run is not complete when recon finishes, when the scenario-router
 prompt is written, or when a small sample of scenarios has findings. The expected
 job is a series of explicit human-approved phases: run recon, create a broad
 scenario backlog, render scenario prompts, run expert review in controlled
-batches, record every approved scenario result, write verified findings,
-validate the run, and summarize the final state.
+batches, record every approved scenario result, run independent finding triage,
+write accepted findings, validate the run, and summarize the final state.
 
 For large targets, expect many scenarios and propose bounded expert batches the
 human can approve. Do not present 10-30 scenarios as complete coverage while
@@ -59,9 +65,13 @@ Do not treat a handoff artifact as phase completion. The scenario-router phase
 is complete only after the backlog is recorded as `scenarios/index.jsonl` plus
 `scenarios/backlog/S*.json`. Expert work is complete only after each consumed
 scenario has a recorded result under `scenarios/finished/`.
+Finding work is complete only after every `finding-candidates/S###-F###.json`
+candidate has a recorded triage decision; final finding reports are written only
+for accepted or downgraded triage decisions.
 
 Before asking for approval to continue, report the counts for recon items,
-backlog scenarios, rendered prompts, finished results, and findings. If the
+backlog scenarios, rendered prompts, finished results, finding candidates,
+triage decisions, and findings. If the
 backlog looks like a sample rather than coverage of credible recon evidence,
 recommend another routing pass. If `quality_gates.require_all_backlog_finished`
 is true, state how many backlog scenarios still need results. If validation
@@ -70,7 +80,7 @@ fails, summarize the failure and ask before running the next corrective command.
 ## Responsibilities
 
 - Confirm the run has source, config, logs, recon output, backlog, finished
-  scenarios, and findings directories.
+  scenarios, finding-candidates, finding-triage, and findings directories.
 - Start recon before expert work.
 - After each phase, summarize artifacts, name the next command, and ask the
   human whether to proceed.
@@ -79,6 +89,9 @@ fails, summarize the failure and ask before running the next corrective command.
   progress chunks only, not human checkpoints. Do not replace per-scenario
   expert work with a broad batch classification, sample, or templated result.
   Split scope only when the human asks to narrow it.
+- Prefer one approval for the full unfinished finding-candidate triage backlog,
+  then process candidates individually in a continuous loop. Do not let scenario
+  experts finalize their own severity ratings.
 - Keep the next checkpoint clear until the backlog is exhausted, the human
   narrows scope, or the human pauses the run.
 - Promote only recon items with concrete path and signal evidence.
