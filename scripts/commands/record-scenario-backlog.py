@@ -24,12 +24,13 @@ def main():
         artifacts=[path / "scenarios" / "index.jsonl", path / "scenarios" / "backlog"],
         review=(
             "Confirm backlog size, coverage decisions, and expert fan-out, then "
-            "ask whether to review all recorded scenarios under one approval."
+            "ask for one approval to review the entire unfinished scenario backlog."
         ),
         next_note=(
             "After approval, review each unfinished scenario individually from "
             "its rendered prompt and relevant source, then record one result per "
-            "scenario. Do not substitute a broad batch classification."
+            "scenario. Do not ask again at internal ranges or substitute a broad "
+            "batch classification."
         ),
     ))
 
