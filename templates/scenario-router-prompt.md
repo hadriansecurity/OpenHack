@@ -31,11 +31,12 @@ them as structured routing hints, not proof.
 ## Task
 
 Create a width-first scenario backlog. For each selected item, choose one
-root-cause expert, write a specific proof question, and define the evidence
-required before the scenario can be verified. One scenario has one primary
-expert, but one file, path, endpoint, parser, or recon item may and often should
-produce many scenarios so every relevant expert reviews the same evidence from
-their root-cause angle.
+root-cause expert, write a specific proof question, define the security
+invariant that must hold, and decompose that invariant into proof obligations
+that the expert must close before the scenario can be finished. One scenario has
+one primary expert, but one file, path, endpoint, parser, or recon item may and
+often should produce many scenarios so every relevant expert reviews the same
+evidence from their root-cause angle.
 
 This is a checkpointed pentest pipeline, not a sampling exercise. The scenario
 backlog is the work queue for the next approved phase, where operators can run
@@ -60,6 +61,22 @@ deployment aliases just because they may share a remediation theme.
 Use candidate scenarios for plausible source-to-sink paths that still need proof.
 Reject only items with no concrete path, boundary, sink, or sensitive exposure
 context. The goal is broad coverage with explicit proof obligations.
+
+A proof obligation is a required security check, not a lead. Examples:
+signature verification, issuer/audience binding, CSRF token validation,
+authorization before object access, parser sandboxing, path canonicalization,
+SQL parameter binding, upload type enforcement, webhook secret validation,
+session rotation, replay prevention, resource limits, dependency integrity, or
+deployment policy enforcement. Do not collapse different required checks into a
+single broad obligation such as "review auth"; split them into the properties
+that must independently hold.
+
+If a scenario relies on a framework, library, SDK, ORM, sanitizer, serializer,
+crypto primitive, cloud policy, generated code, or deployment configuration for
+an important guard, create a proof obligation for that delegated guard. The
+downstream expert must cite the exact locked dependency/config/runtime behavior
+or return `needs_context`; do not let "the framework handles it" become
+evidence.
 
 Use `coverage_gaps.routing_requirements` as the minimum explicit coverage
 contract. Each listed path/expert pair must either receive a scenario with that
@@ -105,6 +122,16 @@ Each scenario item must contain:
 - `target_path`
 - `proof_question`
 - `evidence_required`
+- `security_invariant`: the property that must hold for this route/sink/boundary
+  to be safe
+- `proof_obligations`: array of concrete checks the expert must answer before
+  finishing the scenario. Each item must contain:
+  - `id`: stable lowercase id such as `unsigned_response_rejected`
+  - `question`: one precise yes/no or prove/reject question
+  - `evidence_required`: source, config, dependency, runtime, or test evidence
+    needed to close this obligation
+  - `central`: boolean, true when unresolved context blocks a finished
+    `verified` or `rejected` scenario result
 
 Each item should also include:
 

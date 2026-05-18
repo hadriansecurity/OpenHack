@@ -7,7 +7,8 @@ phase: routing
 # Scenario Router
 
 Turns recon items into expert assignments. A scenario is the combination of one
-recon item, one expert, one proof question, and one evidence standard.
+recon item, one expert, one proof question, one security invariant, and a set of
+proof obligations that must be closed by the scenario expert.
 One expert per scenario does not mean one expert per file: the same recon item
 or target path should appear in multiple scenarios whenever several root-cause
 experts have credible evidence to review.
@@ -55,6 +56,10 @@ scenarios required to cover the credible recon evidence without sampling.
   deployment context.
 - Keep one primary root-cause expert per scenario. Put related families in
   `candidate_queue_entries` or create another scenario.
+- Split the security invariant into concrete proof obligations. Include a
+  separate obligation for each required guard, trust binding, parser boundary,
+  delegated framework/library behavior, runtime setting, and impact condition
+  that must be answered before the scenario can be finished.
 
 ## Fan-Out Heuristics
 
@@ -124,8 +129,10 @@ decide whether to run another router pass.
 ## Scenario Prompt Requirements
 
 Each scenario must include recon item id, expert id, target path, proof question,
-evidence required, and result location. Add routing rationale, priority,
-expected finding width, and candidate policy when available.
+evidence required, security invariant, proof obligations, and result location.
+Each proof obligation must have a stable id, question, evidence requirement, and
+`central` boolean. Add routing rationale, priority, expected finding width, and
+candidate policy when available.
 
 ## Coverage Decision Requirements
 

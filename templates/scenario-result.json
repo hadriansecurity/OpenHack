@@ -19,6 +19,22 @@
       "note": "source, sink, guard, or impact evidence"
     }
   ],
+  "proof_obligations": [
+    {
+      "id": "obligation_id_from_scenario",
+      "status": "proven_safe|proven_vulnerable|not_applicable|needs_context",
+      "summary": "Conclusion for this required check. For needs_context, explain the missing source/config/runtime fact.",
+      "evidence": [
+        {
+          "path": "source-relative/path",
+          "line": 1,
+          "snippet": "Exact source line snippet copied from the cited file",
+          "role": "guard|source|sink|impact|dependency",
+          "note": "why this line closes the obligation"
+        }
+      ]
+    }
+  ],
   "surface_class_coverage": [],
   "same_root_expansion": [],
   "candidate_queue_entries": [],

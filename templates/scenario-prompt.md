@@ -10,6 +10,8 @@
 - Result location: `<result_location>`
 - Proof question: <proof_question>
 - Evidence required: <evidence_required>
+- Security invariant: <security_invariant>
+- Required proof obligations: <proof_obligations>
 
 ## Instructions
 
@@ -29,11 +31,24 @@ trace attacker control to the exact sink or boundary, inspect guards in the
 context where they are consumed, check class-specific edge cases, and expand to
 sibling parameters/endpoints/jobs that share the same root cause.
 
+Do not stop after the first bug-shaped issue. A finding closes only the proof
+obligation it proves vulnerable; it does not finish the scenario while other
+central obligations remain unanswered. Answer every required proof obligation
+listed above with `proven_safe`, `proven_vulnerable`, `not_applicable`, or
+`needs_context`.
+
 Evidence must be concrete enough for another reviewer to replay the reasoning
 without guessing. Prefer exact files, functions, routes, line references,
 configuration paths, data-flow steps, caller roles, preconditions, and final
 security impact. Suspicious names, dangerous APIs, dependency folklore, and
 framework reputation are only leads until tied to reachability and impact.
+
+Do not treat delegated trust as proof. If an important guard is handled by a
+framework, library, SDK, ORM, sanitizer, serializer, crypto primitive, cloud
+policy, generated code, or deployment configuration, cite the exact locked
+source/config/runtime behavior that enforces it. If you cannot inspect the
+relevant dependency or generated artifact, mark that obligation `needs_context`
+instead of treating it as safe.
 
 When the scenario is promising but not yet proven, return `candidate` or
 `needs_context` with the smallest missing facts. When a different root-cause
@@ -52,6 +67,13 @@ Write JSON with:
 - `expert`
 - `summary`
 - `evidence`
+- `proof_obligations`: one result item for every required proof obligation:
+  - `id`: must match the scenario obligation id
+  - `status`: `proven_safe`, `proven_vulnerable`, `not_applicable`, or
+    `needs_context`
+  - `summary`: short conclusion for that obligation
+  - `evidence`: source-line evidence for closed obligations; use an empty array
+    only for `needs_context` and explain the missing context in `summary`
 - `surface_class_coverage`
 - `same_root_expansion`
 - `candidate_queue_entries`
