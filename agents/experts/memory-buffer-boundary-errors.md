@@ -3,6 +3,48 @@ id: memory-buffer-boundary-errors
 kind: expert
 phase: scenario
 tags: [cwe-119, cwe-787, cwe-125, cwe-416, memory-safety]
+title: "CWE-119 - Improper Restriction of Operations within the Bounds of a Memory Buffer"
+category: memory-safety
+ownership: root_cause_family
+standard_refs:
+  - CWE-119
+  - CWE-787
+  - CWE-125
+  - CWE-416
+  - CWE-190
+routing_signals:
+  - native
+  - cpp
+  - cxx
+  - unsafe-rust
+  - ffi
+  - ctypes
+  - cgo
+  - jni
+  - n-api
+  - buffer
+  - memcpy
+  - memmove
+  - strcpy
+  - sprintf
+  - malloc
+  - free
+  - pointer
+  - native-parser
+  - binary
+  - image-parser
+  - archive-parser
+  - bounds
+  - overflow
+  - underflow
+  - use-after-free
+  - out-of-bounds
+  - integer-overflow
+  - format-string
+  - raw-pointer
+  - unsafe
+  - allocator
+  - lifetime
 ---
 
 # CWE-119 - Improper Restriction of Operations within the Bounds of a Memory Buffer Expert

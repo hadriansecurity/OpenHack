@@ -3,6 +3,69 @@ id: authentication-failures
 kind: expert
 phase: scenario
 tags: [owasp-a07-2025, authentication, session, identity, csrf]
+title: "A07:2025 - Authentication Failures"
+category: authentication
+ownership: root_cause_family
+standard_refs:
+  - OWASP A07:2025
+  - OWASP API2:2023
+  - CWE-287
+  - CWE-306
+  - CWE-352
+  - CWE-384
+routing_signals:
+  - login
+  - signin
+  - sign-in
+  - password-reset
+  - reset-token
+  - forgot-password
+  - mfa
+  - 2fa
+  - otp
+  - session
+  - cookie
+  - remember-me
+  - magic-link
+  - sso
+  - impersonate
+  - auth-callback
+  - account-linking
+  - verify-email
+  - oauth
+  - oidc
+  - saml
+  - shibboleth
+  - callback
+  - redirect_uri
+  - state
+  - nonce
+  - assertion
+  - id_token
+  - access_token
+  - refresh_token
+  - audience
+  - issuer
+  - jwks
+  - acs
+  - relaystate
+  - federation
+  - login-callback
+  - csrf
+  - csrf-token
+  - origin-check
+  - referer-check
+  - same-site
+  - form-submit
+  - unsafe-method
+  - mutation
+  - update-profile
+  - change-password
+  - cookie-auth
+  - pkce
+  - device-trust
+  - step-up
+  - logout
 ---
 
 # A07:2025 - Authentication Failures Expert

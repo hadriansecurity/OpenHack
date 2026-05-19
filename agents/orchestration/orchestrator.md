@@ -2,6 +2,7 @@
 id: orchestrator
 kind: orchestration
 phase: setup
+owns: run lifecycle and quality gates
 ---
 
 # Orchestrator

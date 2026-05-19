@@ -3,6 +3,80 @@ id: security-misconfiguration
 kind: expert
 phase: scenario
 tags: [owasp-a02-2025, api8-2023, headers, cors, debug, proxy]
+title: "A02:2025 - Security Misconfiguration"
+category: configuration
+ownership: root_cause_family
+standard_refs:
+  - OWASP A02:2025
+  - OWASP API8:2023
+  - CWE-16
+  - CWE-601
+  - CWE-1021
+routing_signals:
+  - admin
+  - administrator
+  - debug
+  - diagnostics
+  - installer
+  - install
+  - setup
+  - phpinfo
+  - healthcheck
+  - status
+  - profiler
+  - console
+  - example
+  - sample
+  - test-endpoint
+  - default-password
+  - directory-listing
+  - backup
+  - staging
+  - cors
+  - access-control-allow-origin
+  - allow-credentials
+  - origin
+  - postmessage
+  - jsonp
+  - frame
+  - iframe
+  - clickjacking
+  - x-frame-options
+  - frame-ancestors
+  - csp
+  - content-security-policy
+  - samesite
+  - secure-cookie
+  - security-headers
+  - referrer-policy
+  - permissions-policy
+  - host-header
+  - forwarded-header
+  - x-forwarded-host
+  - forwarded
+  - cache-key
+  - proxy
+  - reverse-proxy
+  - cdn
+  - varnish
+  - nginx
+  - location
+  - upstream
+  - surrogate-key
+  - vary
+  - absolute-url
+  - base-url
+  - canonical-url
+  - redirect
+  - return_url
+  - next
+  - continue
+  - response-header
+  - content-disposition
+  - crlf
+  - header-injection
+  - external-url
+  - callback-url
 ---
 
 # A02:2025 - Security Misconfiguration Expert

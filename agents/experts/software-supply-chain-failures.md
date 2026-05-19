@@ -3,6 +3,44 @@ id: software-supply-chain-failures
 kind: expert
 phase: scenario
 tags: [owasp-a03-2025, supply-chain, dependencies, components]
+title: "A03:2025 - Software Supply Chain Failures"
+category: supply-chain
+ownership: root_cause_family
+standard_refs:
+  - OWASP A03:2025
+  - CWE-1104
+  - CWE-494
+  - CWE-829
+routing_signals:
+  - manifest
+  - lockfile
+  - package-lock
+  - yarn.lock
+  - pnpm-lock
+  - composer.lock
+  - gemfile.lock
+  - requirements.txt
+  - poetry.lock
+  - pipfile.lock
+  - cargo.lock
+  - go.sum
+  - gradle.lockfile
+  - pom.xml
+  - vendored-library
+  - dependency
+  - supply-chain
+  - vulnerable-package
+  - package
+  - plugin
+  - container-image
+  - generated-client
+  - native-extension
+  - browser-bundle
+  - build-script
+  - registry
+  - checksum
+  - digest
+  - package-hook
 ---
 
 # A03:2025 - Software Supply Chain Failures Expert

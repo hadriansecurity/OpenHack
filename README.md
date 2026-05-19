@@ -323,7 +323,9 @@ The workflow roles:
 - **Reconnaissance agents** find surfaces — routes, files, sinks, auth boundaries,
   upload paths, parser entrypoints, manifests, and debug/admin areas.
 - **Expert agents** own OWASP/MITRE-aligned root-cause families. The current
-  registry defines **12 expert families** in `config/agents.json`.
+  registry defines **12 expert families** as Markdown manifests in
+  `agents/experts/`; each file's YAML frontmatter declares the expert id,
+  category, ownership, standards, and routing signals.
 
 The expert families are:
 

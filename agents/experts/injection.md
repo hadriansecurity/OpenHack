@@ -3,6 +3,123 @@ id: injection
 kind: expert
 phase: scenario
 tags: [owasp-a05-2025, injection, cwe-79, cwe-89, cwe-78, cwe-94]
+title: "A05:2025 - Injection"
+category: injection
+ownership: root_cause_family
+standard_refs:
+  - OWASP A05:2025
+  - CWE-79
+  - CWE-89
+  - CWE-78
+  - CWE-77
+  - CWE-94
+  - CWE-643
+  - CWE-917
+routing_signals:
+  - sql
+  - raw-query
+  - query
+  - execute
+  - prepared
+  - parameterized
+  - where
+  - order-by
+  - sort
+  - dynamic-filter
+  - like
+  - concat
+  - get_records_sql
+  - knex.raw
+  - sequelize.literal
+  - prisma.$queryraw
+  - jdbc
+  - db.query
+  - repository-query
+  - ldap
+  - ldap_search
+  - nosql
+  - mongo
+  - findone
+  - aggregate
+  - bson
+  - xpath
+  - xquery
+  - query-dsl
+  - filter
+  - elasticsearch
+  - opensearch
+  - redis
+  - process
+  - subprocess
+  - shell
+  - shell_exec
+  - system
+  - exec
+  - spawn
+  - popen
+  - passthru
+  - cli-wrapper
+  - converter
+  - imagemagick
+  - ffmpeg
+  - tar
+  - zip
+  - curl
+  - command
+  - argument
+  - shell=true
+  - xss
+  - template
+  - html
+  - innerhtml
+  - outerhtml
+  - dangerouslysetinnerhtml
+  - ng-bind-html
+  - v-html
+  - html_writer
+  - format_text
+  - format_string
+  - param_raw
+  - param_notags
+  - stored-content
+  - markdown
+  - wysiwyg
+  - rich-text
+  - script
+  - dom
+  - render-from-string
+  - template-name
+  - expression
+  - macro
+  - mustache
+  - handlebars
+  - jinja
+  - twig
+  - erb
+  - velocity
+  - freemarker
+  - liquid
+  - ejs
+  - pug
+  - blade
+  - eval-template
+  - user-template
+  - prototype
+  - __proto__
+  - constructor
+  - deep-merge
+  - merge
+  - extend
+  - setpath
+  - path-setter
+  - lodash
+  - querystring
+  - qs
+  - json-merge
+  - defaultsdeep
+  - recursive-merge
+  - pollution
+  - eval
 ---
 
 # A05:2025 - Injection Expert
