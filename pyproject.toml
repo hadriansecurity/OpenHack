@@ -31,3 +31,5 @@ target-version = "py39"
 
 [tool.mypy]
 files = ["src"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
