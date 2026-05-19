@@ -13,8 +13,23 @@ dependencies = [
   "jsonschema>=4.18",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.10",
+  "types-jsonschema",
+]
+
 [project.scripts]
 whitebox = "whitebox_pentesting_agent.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff]
+target-version = "py39"
+
+[tool.mypy]
+files = ["src"]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
