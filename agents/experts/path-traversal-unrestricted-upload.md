@@ -3,6 +3,56 @@ id: path-traversal-unrestricted-upload
 kind: expert
 phase: scenario
 tags: [cwe-22, cwe-434, files, uploads, storage]
+title: "CWE-22 / CWE-434 - Path Traversal and Unrestricted Upload"
+category: file-storage
+ownership: root_cause_family
+standard_refs:
+  - CWE-22
+  - CWE-434
+  - CWE-23
+  - CWE-73
+routing_signals:
+  - download
+  - path
+  - filename
+  - filepath
+  - include
+  - archive
+  - zip-slip
+  - tar-slip
+  - extract
+  - readfile
+  - send_file
+  - file_get_contents
+  - directory
+  - attachment
+  - template-path
+  - storage-key
+  - object-key
+  - local-file
+  - traversal
+  - dotdot
+  - upload
+  - multipart
+  - content-type
+  - mime
+  - extension
+  - file-size
+  - stored-file
+  - avatar
+  - import
+  - csv
+  - image
+  - media
+  - move_uploaded_file
+  - storage
+  - bucket
+  - public-url
+  - unzip
+  - signed-url
+  - object-storage
+  - symlink
+  - content-disposition
 ---
 
 # CWE-22 / CWE-434 - Path Traversal and Unrestricted Upload Expert

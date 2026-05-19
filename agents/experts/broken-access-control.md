@@ -3,6 +3,87 @@ id: broken-access-control
 kind: expert
 phase: scenario
 tags: [owasp-a01-2025, api1-2023, api3-2023, api5-2023, authorization]
+title: "A01:2025 - Broken Access Control"
+category: access-control
+ownership: root_cause_family
+standard_refs:
+  - OWASP A01:2025
+  - OWASP API1:2023
+  - OWASP API3:2023
+  - OWASP API5:2023
+  - CWE-284
+  - CWE-862
+  - CWE-863
+  - CWE-639
+  - CWE-918
+routing_signals:
+  - authorization
+  - access-control
+  - permission
+  - role
+  - acl
+  - policy
+  - owner
+  - ownership
+  - tenant
+  - tenant_id
+  - account_id
+  - org_id
+  - project_id
+  - resource-id
+  - object-id
+  - user_id
+  - userid
+  - courseid
+  - groupid
+  - contextid
+  - itemid
+  - instanceid
+  - admin-action
+  - bulk-action
+  - graphql-selection
+  - serializer
+  - projection
+  - include
+  - expand
+  - fields
+  - mass-assignment
+  - overposting
+  - model-binding
+  - fillable
+  - assign
+  - attributes
+  - params
+  - request-body
+  - is_admin
+  - scope
+  - entitlement
+  - ssrf
+  - url-fetch
+  - webhook
+  - preview
+  - import-url
+  - fetch
+  - requests
+  - httpclient
+  - axios
+  - got
+  - metadata
+  - 169.254.169.254
+  - internal-url
+  - image-url
+  - avatar-url
+  - redirect-follow
+  - file-url
+  - oembed
+  - crawler
+  - server-side-browser
+  - pdf-render
+  - dns
+  - egress
+  - xinclude
+  - xslt
+  - metadata-service
 ---
 
 # A01:2025 - Broken Access Control Expert

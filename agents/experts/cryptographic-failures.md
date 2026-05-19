@@ -3,6 +3,49 @@ id: cryptographic-failures
 kind: expert
 phase: scenario
 tags: [owasp-a04-2025, cryptography, tokens, keys, randomness]
+title: "A04:2025 - Cryptographic Failures"
+category: crypto
+ownership: root_cause_family
+standard_refs:
+  - OWASP A04:2025
+  - CWE-327
+  - CWE-326
+  - CWE-330
+  - CWE-347
+  - CWE-798
+routing_signals:
+  - crypto
+  - token
+  - session
+  - jwt
+  - jws
+  - jwe
+  - signed-cookie
+  - hmac
+  - signature
+  - nonce
+  - random
+  - randomness
+  - uuid
+  - secret-key
+  - encryption
+  - decrypt
+  - password-hash
+  - bcrypt
+  - reset-token
+  - api-key
+  - key-rotation
+  - certificate
+  - tls
+  - private-key
+  - pem
+  - iv
+  - salt
+  - hash
+  - webhook-secret
+  - kid
+  - audience
+  - issuer
 ---
 
 # A04:2025 - Cryptographic Failures Expert

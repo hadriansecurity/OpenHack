@@ -2,6 +2,15 @@
 id: source-recon
 kind: reconnaissance
 phase: recon
+emits:
+  - recon_item
+signals:
+  - route
+  - sink
+  - manifest
+  - auth-boundary
+  - secret-surface
+  - file
 ---
 
 # Source Recon

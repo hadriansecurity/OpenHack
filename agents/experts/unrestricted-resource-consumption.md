@@ -3,6 +3,50 @@ id: unrestricted-resource-consumption
 kind: expert
 phase: scenario
 tags: [api4-2023, cwe-770, cwe-400, availability, dos]
+title: "API4:2023 / CWE-770 - Unrestricted Resource Consumption"
+category: availability
+ownership: root_cause_family
+standard_refs:
+  - OWASP API4:2023
+  - CWE-770
+  - CWE-400
+  - CWE-1333
+routing_signals:
+  - unbounded-input
+  - expensive-search
+  - parser
+  - queue
+  - regex
+  - recursion
+  - pagination
+  - limit
+  - upload-size
+  - decompress
+  - zip-bomb
+  - image-resize
+  - pdf
+  - xml
+  - json
+  - memory
+  - timeout
+  - loop
+  - bulk
+  - export
+  - resource-exhaustion
+  - dos
+  - denial-of-service
+  - complexity
+  - fan-out
+  - worker
+  - retry
+  - backpressure
+  - quota
+  - provider-cost
+  - email
+  - sms
+  - ocr
+  - thumbnail
+  - conversion
 ---
 
 # API4:2023 / CWE-770 - Unrestricted Resource Consumption Expert

@@ -3,6 +3,64 @@ id: software-data-integrity-failures
 kind: expert
 phase: scenario
 tags: [owasp-a08-2025, deserialization, trusted-data, integrity]
+title: "A08:2025 - Software or Data Integrity Failures"
+category: integrity
+ownership: root_cause_family
+standard_refs:
+  - OWASP A08:2025
+  - CWE-502
+  - CWE-345
+  - CWE-353
+  - CWE-494
+routing_signals:
+  - deserialize
+  - unserialize
+  - pickle
+  - yaml.load
+  - objectinputstream
+  - readobject
+  - marshal
+  - signed-blob
+  - serialized
+  - phar
+  - jsonpickle
+  - binaryformatter
+  - session-store
+  - gadget
+  - polymorphic
+  - trusted-data
+  - webhook-signature
+  - queue-payload
+  - cache-state
+  - plugin-update
+  - software-update
+  - artifact
+  - checksum
+  - signature-verification
+  - schema-validation
+  - safe-loader
+  - object-mapper
+  - integrity
+  - provenance
+  - xml
+  - dtd
+  - entity
+  - external-entity
+  - xxe
+  - soap
+  - saml
+  - svg
+  - docx
+  - xlsx
+  - xinclude
+  - sax
+  - domdocument
+  - simplexml
+  - xmlreader
+  - documentbuilder
+  - lxml
+  - etree
+  - resolve-entity
 ---
 
 # A08:2025 - Software or Data Integrity Failures Expert

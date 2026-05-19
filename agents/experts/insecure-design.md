@@ -3,6 +3,73 @@ id: insecure-design
 kind: expert
 phase: scenario
 tags: [owasp-a06-2025, api6-2023, business-logic, race, abuse]
+title: "A06:2025 - Insecure Design"
+category: design
+ownership: root_cause_family
+standard_refs:
+  - OWASP A06:2025
+  - OWASP API6:2023
+  - CWE-840
+  - CWE-841
+  - CWE-362
+  - CWE-307
+routing_signals:
+  - state-transition
+  - approval
+  - approve
+  - reject
+  - cancel
+  - refund
+  - checkout
+  - payment
+  - coupon
+  - quota
+  - limit
+  - replay
+  - idempotency
+  - order-status
+  - workflow
+  - step
+  - sequence
+  - balance
+  - transfer
+  - entitlement
+  - upgrade
+  - downgrade
+  - race
+  - toctou
+  - concurrent
+  - concurrency
+  - retry
+  - lock
+  - mutex
+  - transaction
+  - double-submit
+  - job
+  - queue
+  - worker
+  - webhook
+  - inventory
+  - unique
+  - constraint
+  - rate-limit
+  - throttle
+  - brute-force
+  - enumeration
+  - otp
+  - spraying
+  - invite
+  - verification-code
+  - guessable-id
+  - search
+  - autocomplete
+  - username
+  - email-check
+  - token-guess
+  - captcha
+  - lockout
+  - business-flow
+  - abuse
 ---
 
 # A06:2025 - Insecure Design Expert

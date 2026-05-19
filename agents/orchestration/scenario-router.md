@@ -2,6 +2,7 @@
 id: scenario-router
 kind: orchestration
 phase: routing
+owns: recon item to expert fan-out
 ---
 
 # Scenario Router
