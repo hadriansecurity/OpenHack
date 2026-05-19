@@ -15,4 +15,4 @@ Before opening a pull request:
 - Run `python3 scripts/commands/validate-run.py` before submitting changes.
 
 The compatibility scripts under `scripts/commands/` remain supported, but new
-integrations should prefer the packaged `whitebox` CLI.
+integrations should prefer the `whitebox` CLI from an editable checkout.

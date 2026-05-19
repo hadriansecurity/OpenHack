@@ -1,6 +1,0 @@
-{
-  "id": "R001",
-  "type": "route|sink|manifest|auth-boundary|secret-surface|file",
-  "path": "source-relative/path",
-  "signals": ["why this matters"]
-}
