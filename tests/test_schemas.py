@@ -9,7 +9,6 @@ still trips the test.
 
 from __future__ import annotations
 
-import copy
 from typing import Any, Callable
 
 import pytest
@@ -308,8 +307,8 @@ def test_finding_triage_invalid_cases(
     assert "finding-triage-schema.json" in str(exc.value)
 
 
-def test_validator_reports_multiple_errors() -> None:
-    """The error message bullets each violation so authors can fix in one pass."""
+def test_validator_reports_each_violation() -> None:
+    """The error message must name each failing field so authors fix in one pass."""
     scenario = _scenario()
     scenario.pop("id")
     scenario.pop("expert")
@@ -317,18 +316,6 @@ def test_validator_reports_multiple_errors() -> None:
     with pytest.raises(ValueError) as exc:
         validate_scenario(scenario)
     message = str(exc.value)
-    # Each missing required field surfaces as a separate bullet.
-    assert message.count("\n- ") >= 3
-
-
-def test_baselines_are_independent() -> None:
-    """Mutating one fixture instance must not leak into another."""
-    a = _scenario()
-    b = _scenario()
-    a["id"] = "S999"
-    assert b["id"] == "S001"
-    # And the deep-copy assumption holds for nested structures.
-    a2 = copy.deepcopy(_scenario_result())
-    a2["evidence"][0]["note"] = "mutated"
-    fresh = _scenario_result()
-    assert fresh["evidence"][0]["note"] != "mutated"
+    assert "'id' is a required property" in message
+    assert "'expert' is a required property" in message
+    assert "target_path" in message

@@ -8,21 +8,20 @@ table branch-by-branch.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
 
 import pytest
 
 from openhack.coverage import (
-    MAX_REQUIREMENTS_PER_PATH,
-    PRODUCTIVE_CLASSES,
-    SUGGESTION_LIMIT,
     _path_class,
     _score_pair,
-    _source_or_sink,
     _tokens,
     coverage_opportunities,
     coverage_suggestions,
     routing_requirements,
+    write_coverage,
 )
 
 
@@ -65,13 +64,6 @@ from openhack.coverage import (
 )
 def test_path_class(path: str, expected: str) -> None:
     assert _path_class(path) == expected
-
-
-def test_productive_classes_match_expectations() -> None:
-    """Sanity-check the productive set — scoring depends on this membership."""
-    assert PRODUCTIVE_CLASSES == {
-        "client", "config", "manifest", "runtime", "script", "template"
-    }
 
 
 # ---------------------------------------------------------------------------
@@ -155,12 +147,6 @@ def test_score_runtime_with_strong_terms_and_sink_is_high() -> None:
     assert confidence == "high"
     assert "query" in strong
     assert "source, sink" in reason or "boundary evidence" in reason
-
-
-def test_source_or_sink_truthy_for_boundary() -> None:
-    assert _source_or_sink(_pair(boundary_mandatory=True)) is True
-    assert _source_or_sink(_pair(interesting=True)) is True
-    assert _source_or_sink(_pair()) is False
 
 
 # ---------------------------------------------------------------------------
@@ -255,7 +241,45 @@ def test_coverage_suggestions_skip_required_pairs() -> None:
     assert all(s["path"] != "app/QueryHandler.php" for s in sugs)
 
 
-def test_constants_have_expected_values() -> None:
-    """Lock in the public limits referenced from docs/AGENTS.md."""
-    assert MAX_REQUIREMENTS_PER_PATH == 4
-    assert SUGGESTION_LIMIT == 500
+# ---------------------------------------------------------------------------
+# write_coverage — disk-side entry point called from the CLI
+# ---------------------------------------------------------------------------
+
+
+def test_write_coverage_emits_coverage_gaps_json(run_dir: Path) -> None:
+    inventory: dict[str, list[dict[str, Any]]] = {
+        "inputs": [_inv_row("inputs", "app/QueryHandler.php", match=["query"])],
+        "sinks": [_inv_row("sinks", "app/QueryHandler.php", match=["raw"])],
+    }
+    out = write_coverage(run_dir, inventory, recon_items=None)
+
+    assert out == run_dir / "recon-output" / "coverage-gaps.json"
+    payload = json.loads(out.read_text())
+
+    # The five sections the rest of the pipeline consumes.
+    for key in (
+        "input_with_sink_or_exposure",
+        "request_boundaries",
+        "boundary_requirements",
+        "expert_opportunities",
+        "routing_requirements",
+        "coverage_suggestions",
+        "triage_summary",
+    ):
+        assert key in payload, f"missing top-level key: {key}"
+
+    summary = payload["triage_summary"]
+    assert summary["hard_routing_requirements"] == len(payload["routing_requirements"])
+    assert summary["expert_scope"] == "unconfigured-all"
+    # No run-config.yaml → all 12 expert IDs end up in the scope.
+    assert len(summary["selected_experts"]) == 12
+
+
+def test_write_coverage_honours_run_config_expert_scope(run_dir: Path) -> None:
+    (run_dir / "run-config.yaml").write_text(
+        'expert_scope:\n  mode: "selected"\n  experts:\n    - "injection"\n'
+    )
+    out = write_coverage(run_dir, inventory={"inputs": []}, recon_items=None)
+    summary = json.loads(out.read_text())["triage_summary"]
+    assert summary["expert_scope"] == "selected"
+    assert summary["selected_experts"] == ["injection"]

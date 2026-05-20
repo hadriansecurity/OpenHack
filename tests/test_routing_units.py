@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -15,6 +17,7 @@ from openhack.routing_units import (
     _kind_for_terms,
     _row_kind,
     build_routing_units,
+    write_routing_units,
 )
 
 
@@ -40,14 +43,20 @@ def test_kind_for_terms(text: set[str], expected: str) -> None:
     assert _kind_for_terms(text) == expected
 
 
-def test_kind_for_terms_first_match_wins() -> None:
-    """Order in ``KIND_TERMS`` is a deliberate priority list."""
-    # 'queue' appears in both resource_consumption and parser_deserialization_integrity
-    # — KIND_TERMS lists parser earlier, so it should win for ambiguous terms in its set.
-    [parser_terms] = [terms for name, terms in KIND_TERMS if name == "parser_deserialization_integrity"]
-    # Pick an unambiguous parser-only term to confirm priority logic.
-    assert _kind_for_terms({"xxe"}) == "parser_deserialization_integrity"
-    assert "xxe" in parser_terms
+def test_kind_for_terms_first_match_wins_on_overlap() -> None:
+    """``KIND_TERMS`` order is a deliberate priority list.
+
+    ``template`` appears in both ``html_template_dom_sink`` (earlier) and
+    ``parser_deserialization_integrity`` (later); the earlier entry must win.
+    """
+    by_name = dict(KIND_TERMS)
+    assert "template" in by_name["html_template_dom_sink"]
+    assert "template" in by_name["parser_deserialization_integrity"]
+    assert _kind_for_terms({"template"}) == "html_template_dom_sink"
+    # Same overlap pattern for ``token`` between identity and secret-exposure.
+    assert "token" in by_name["identity_state_access_control"]
+    assert "token" in by_name["secret_debug_exposure"]
+    assert _kind_for_terms({"token"}) == "identity_state_access_control"
 
 
 def test_row_kind_classifies_request_boundary_evidence() -> None:
@@ -225,3 +234,35 @@ def test_build_routing_units_emits_mandatory_path_unit_for_uncovered_gap() -> No
     assert len(units) == 1
     assert units[0]["coverage"] == "mandatory_path"
     assert units[0]["required_experts"] == []
+
+
+# ---------------------------------------------------------------------------
+# write_routing_units — disk-side entry point called from the CLI
+# ---------------------------------------------------------------------------
+
+
+def test_write_routing_units_emits_jsonl_one_unit_per_line(run_dir: Path) -> None:
+    (run_dir / "recon-output").mkdir(parents=True, exist_ok=True)
+    (run_dir / "recon-output" / "coverage-gaps.json").write_text(json.dumps({
+        "routing_requirements": [_req("app/QueryHandler.php", "injection")],
+    }))
+    inventory: dict[str, list[dict[str, Any]]] = {
+        "sinks": [
+            {"kind": "sinks", "path": "app/QueryHandler.php", "line": 1, "match": ["raw"], "text": "query"},
+        ],
+    }
+    out = write_routing_units(run_dir, inventory)
+
+    assert out == run_dir / "recon-output" / "routing-units.jsonl"
+    lines = [line for line in out.read_text().splitlines() if line.strip()]
+    assert len(lines) == 1
+    unit = json.loads(lines[0])
+    assert unit["unit_id"] == "U001"
+    assert unit["path"] == "app/QueryHandler.php"
+    assert "injection" in unit["required_experts"]
+
+
+def test_write_routing_units_with_no_coverage_file_writes_empty(run_dir: Path) -> None:
+    out = write_routing_units(run_dir, inventory={})
+    assert out.exists()
+    assert out.read_text() == ""
