@@ -19,6 +19,7 @@ dev = [
   "ruff>=0.6",
   "mypy>=1.10",
   "types-jsonschema",
+  "pytest>=7.0",
 ]
 
 [project.scripts]
@@ -34,3 +35,7 @@ target-version = "py39"
 files = ["src"]
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
